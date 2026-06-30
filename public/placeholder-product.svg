@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" fill="none">
+  <rect width="800" height="1000" fill="url(#grad)"/>
+  <circle cx="250" cy="280" r="90" fill="#fbcfe8" opacity="0.8"/>
+  <circle cx="520" cy="220" r="70" fill="#bae6fd" opacity="0.8"/>
+  <circle cx="400" cy="420" r="110" fill="#fde68a" opacity="0.7"/>
+  <circle cx="300" cy="560" r="60" fill="#ddd6fe" opacity="0.8"/>
+  <circle cx="560" cy="520" r="80" fill="#fecdd3" opacity="0.8"/>
+  <text x="400" y="780" text-anchor="middle" fill="#64748b" font-family="Arial, sans-serif" font-size="28">Air Cloud MSK</text>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="800" y2="1000" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff1f2"/>
+      <stop offset="1" stop-color="#eff6ff"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  image     String?
+  sortOrder Int       @default(0)
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Int
+  images      String   @default("[]")
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model OrderRequest {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  product   String?
+  message   String?
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id           Int    @id @default(1)
+  siteName     String @default("Air Cloud MSK")
+  telegramUrl  String @default("https://t.me/air_cloud_msk")
+  vkUrl        String @default("https://vk.ru/vozdushnyesharymsk")
+  maxUrl       String @default("")
+  phone        String @default("+79652955956")
+  heroTitle    String @default("Композиции из гелевых шаров")
+  heroSubtitle String @default("Оформление праздников в Москве — гендер-пати, выписка, дни рождения")
+  seoTitle     String @default("Air Cloud MSK — гелевые шары и оформление праздников в Москве")
+  seoDescription String @default("Композиции из гелевых шаров на заказ: гендер-пати, выписка из роддома, дни рождения. Москва. Заказ через Telegram, VK или MAX.")
+}
