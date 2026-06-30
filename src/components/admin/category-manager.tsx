@@ -67,9 +67,9 @@ export function CategoryManager({
     <div className="grid gap-8 lg:grid-cols-2">
       <form
         onSubmit={createCategory}
-        className="space-y-4 rounded-2xl border border-pink-100 bg-white p-6 shadow-sm"
+        className="space-y-4 rounded-2xl border border-rose-dusty-light/50 bg-cream-card p-6 shadow-sm"
       >
-        <h2 className="text-xl font-semibold text-slate-900">Новая категория</h2>
+        <h2 className="text-xl font-semibold text-[#3d3a36]">Новая категория</h2>
         <div className="space-y-2">
           <Label htmlFor="category-name">Название</Label>
           <Input
@@ -114,20 +114,20 @@ export function CategoryManager({
       </form>
 
       <div className="space-y-3">
-        <h2 className="text-xl font-semibold text-slate-900">
+        <h2 className="text-xl font-semibold text-[#3d3a36]">
           Список ({categories.length})
         </h2>
         {categories.length === 0 ? (
-          <p className="text-slate-500">Категорий пока нет</p>
+          <p className="text-[#9c9590]">Категорий пока нет</p>
         ) : (
           categories.map((category) => (
             <div
               key={category.id}
-              className="flex items-center justify-between rounded-2xl border border-pink-100 bg-white p-4 shadow-sm"
+              className="flex items-center justify-between rounded-2xl border border-rose-dusty-light/50 bg-cream-card p-4 shadow-sm"
             >
               <div>
-                <div className="font-medium text-slate-900">{category.name}</div>
-                <div className="text-sm text-slate-500">{category.slug}</div>
+                <div className="font-medium text-[#3d3a36]">{category.name}</div>
+                <div className="text-sm text-[#9c9590]">{category.slug}</div>
               </div>
               <button
                 type="button"

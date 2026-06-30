@@ -32,7 +32,7 @@ export function SocialLinks({
         href={settings.telegramUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-sky-100 text-sky-600 transition hover:bg-sky-200"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-soft-light text-blue-soft-dark transition hover:bg-blue-soft/50"
         aria-label="Telegram"
       >
         <Send className="h-4 w-4" />
@@ -41,7 +41,7 @@ export function SocialLinks({
         href={settings.vkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-700 transition hover:bg-blue-200"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-rose-dusty-light/60 text-rose-dusty-dark transition hover:bg-rose-dusty-light"
         aria-label="ВКонтакте"
       >
         <VkIcon className="h-4 w-4" />
@@ -51,7 +51,7 @@ export function SocialLinks({
           href={settings.maxUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-violet-100 text-violet-700 transition hover:bg-violet-200"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream-dark text-[#6b6560] transition hover:bg-rose-dusty-light/40"
           aria-label="MAX"
         >
           <MaxIcon className="h-4 w-4" />
@@ -59,7 +59,7 @@ export function SocialLinks({
       ) : null}
       <a
         href={buildTelUrl(settings.phone)}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 transition hover:bg-emerald-200"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream-dark text-rose-dusty-dark transition hover:bg-rose-dusty-light/50"
         aria-label="Позвонить"
       >
         <Phone className="h-4 w-4" />
@@ -76,15 +76,15 @@ export function Header({ settings }: { settings: SiteSettings }) {
   ];
 
   return (
-    <header className="sticky top-0 z-50 border-b border-pink-100/80 bg-white/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-rose-dusty-light/50 bg-cream/85 backdrop-blur-lg">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
         <Link href="/" className="group flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-400 to-sky-400 text-white shadow-lg shadow-pink-200/60">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-dusty to-blue-soft text-white shadow-md shadow-rose-dusty/20 transition group-hover:shadow-lg group-hover:shadow-rose-dusty/25">
             <MessageCircle className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-lg font-bold text-slate-900">{settings.siteName}</div>
-            <div className="text-xs text-slate-500">Гелевые шары · Москва</div>
+            <div className="text-lg font-bold text-[#3d3a36]">{settings.siteName}</div>
+            <div className="text-xs text-[#6b6560]">Гелевые шары · Москва</div>
           </div>
         </Link>
 
@@ -93,7 +93,7 @@ export function Header({ settings }: { settings: SiteSettings }) {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-slate-600 transition hover:text-pink-600"
+              className="text-sm font-medium text-[#6b6560] transition hover:text-rose-dusty-dark"
             >
               {link.label}
             </Link>
@@ -103,12 +103,12 @@ export function Header({ settings }: { settings: SiteSettings }) {
         <SocialLinks settings={settings} className="flex items-center gap-2" />
       </div>
 
-      <nav className="flex gap-4 overflow-x-auto border-t border-pink-50 px-4 py-3 md:hidden">
+      <nav className="flex gap-3 overflow-x-auto border-t border-rose-dusty-light/30 px-4 py-3 md:hidden">
         {links.map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className="whitespace-nowrap rounded-full bg-pink-50 px-4 py-2 text-sm font-medium text-pink-700"
+            className="whitespace-nowrap rounded-full bg-rose-dusty-light/40 px-4 py-2 text-sm font-medium text-rose-dusty-dark"
           >
             {link.label}
           </Link>

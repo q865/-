@@ -11,6 +11,8 @@ import { formatPrice, getProductGallery } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
+type Params = Promise<{ slug: string }>;
+
 export async function generateMetadata({ params }: { params: Params }) {
   const { slug } = await params;
   const product = await prisma.product.findUnique({ where: { slug } });
@@ -41,7 +43,7 @@ export default async function ProductPage({ params }: { params: Params }) {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-2">
           <div className="space-y-4">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-pink-50 to-sky-50">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-rose-dusty-light/30 to-blue-soft-light/40 ring-1 ring-rose-dusty-light/40">
               <ProductImage
                 src={gallery[0]}
                 alt={product.name}
@@ -68,14 +70,14 @@ export default async function ProductPage({ params }: { params: Params }) {
           <div className="space-y-6">
             <div>
               <Badge>{product.category.name}</Badge>
-              <h1 className="mt-3 text-4xl font-bold text-slate-900">{product.name}</h1>
-              <p className="mt-4 text-3xl font-bold text-pink-600">
+              <h1 className="mt-3 text-4xl font-bold text-[#3d3a36]">{product.name}</h1>
+              <p className="mt-4 text-3xl font-bold text-rose-dusty-dark">
                 от {formatPrice(product.price)}
               </p>
             </div>
 
             {product.description ? (
-              <p className="text-lg leading-8 text-slate-600">{product.description}</p>
+              <p className="text-lg leading-8 text-[#6b6560]">{product.description}</p>
             ) : null}
 
             <Card>

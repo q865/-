@@ -21,20 +21,22 @@ export default async function CatalogPage({
   const products = await prisma.product.findMany({
     where: {
       published: true,
-      ...(categorySlug
-        ? { category: { slug: categorySlug } }
-        : {}),
+      ...(categorySlug ? { category: { slug: categorySlug } } : {}),
     },
     include: { category: true },
     orderBy: { createdAt: "desc" },
   });
 
+  const chipActive = "bg-rose-dusty text-cream shadow-sm shadow-rose-dusty/20";
+  const chipIdle =
+    "border border-rose-dusty-light/60 bg-cream-card text-rose-dusty-dark hover:bg-rose-dusty-light/40";
+
   return (
     <SiteShell>
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900">Каталог</h1>
-          <p className="mt-2 text-slate-600">
+          <h1 className="text-4xl font-bold text-[#3d3a36]">Каталог</h1>
+          <p className="mt-2 text-[#6b6560]">
             Композиции из гелевых шаров на любой праздник
           </p>
         </div>
@@ -42,11 +44,7 @@ export default async function CatalogPage({
         <div className="mb-8 flex flex-wrap gap-2">
           <Link
             href="/catalog"
-            className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-              !categorySlug
-                ? "bg-pink-500 text-white"
-                : "bg-pink-50 text-pink-700 hover:bg-pink-100"
-            }`}
+            className={`rounded-full px-4 py-2 text-sm font-medium transition ${!categorySlug ? chipActive : chipIdle}`}
           >
             Все
           </Link>
@@ -55,9 +53,7 @@ export default async function CatalogPage({
               key={category.id}
               href={`/catalog?category=${category.slug}`}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                categorySlug === category.slug
-                  ? "bg-pink-500 text-white"
-                  : "bg-pink-50 text-pink-700 hover:bg-pink-100"
+                categorySlug === category.slug ? chipActive : chipIdle
               }`}
             >
               {category.name}
@@ -66,7 +62,7 @@ export default async function CatalogPage({
         </div>
 
         {products.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-pink-200 bg-white p-12 text-center text-slate-500">
+          <div className="rounded-3xl border border-dashed border-rose-dusty-light bg-cream-card p-12 text-center text-[#6b6560]">
             В этой категории пока нет товаров.
           </div>
         ) : (

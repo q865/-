@@ -37,11 +37,11 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#fffafb] px-4">
+    <div className="flex min-h-screen items-center justify-center page-glow px-4">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Вход в админку</CardTitle>
-          <p className="text-sm text-slate-500">Air Cloud MSK</p>
+          <p className="text-sm text-[#9c9590]">Air Cloud MSK</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

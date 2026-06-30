@@ -8,6 +8,15 @@ import { getSettings, buildTelegramOrderUrl } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
+const categoryGradients = [
+  "from-rose-dusty-light/80 to-cream-dark",
+  "from-blue-soft-light to-cream",
+  "from-rose-dusty-light/50 to-blue-soft-light/60",
+  "from-cream-dark to-blue-soft-light/70",
+  "from-blue-soft-light/80 to-rose-dusty-light/40",
+  "from-cream to-rose-dusty-light/60",
+];
+
 export default async function HomePage() {
   const settings = await getSettings();
 
@@ -27,17 +36,20 @@ export default async function HomePage() {
   return (
     <SiteShell>
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#fce7f3_0%,_transparent_50%),radial-gradient(circle_at_top_right,_#dbeafe_0%,_transparent_45%)]" />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-24">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm text-pink-700 shadow-sm">
-              <Sparkles className="h-4 w-4" />
+        <div className="cloud-orb cloud-orb-rose -left-20 top-10 h-64 w-64" />
+        <div className="cloud-orb cloud-orb-blue -right-16 top-20 h-56 w-56" />
+        <div className="cloud-orb cloud-orb-cream bottom-0 left-1/3 h-48 w-48" />
+
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-24">
+          <div className="space-y-7">
+            <div className="inline-flex items-center gap-2 rounded-full border border-rose-dusty-light/60 bg-cream-card/80 px-4 py-2 text-sm text-rose-dusty-dark shadow-sm backdrop-blur-sm">
+              <Sparkles className="h-4 w-4 text-blue-soft-dark" />
               Оформление праздников в Москве
             </div>
-            <h1 className="text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl">
+            <h1 className="text-4xl font-extrabold leading-[1.15] tracking-tight text-[#3d3a36] sm:text-5xl">
               {settings.heroTitle}
             </h1>
-            <p className="max-w-xl text-lg leading-8 text-slate-600">
+            <p className="max-w-xl text-lg leading-8 text-[#6b6560]">
               {settings.heroSubtitle}
             </p>
             <div className="flex flex-wrap gap-3">
@@ -59,29 +71,33 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="relative mx-auto grid w-full max-w-md grid-cols-2 gap-4 lg:max-w-none">
             {[
-              "from-pink-200 to-rose-300",
-              "from-sky-200 to-blue-300",
-              "from-violet-200 to-purple-300",
-              "from-amber-200 to-orange-300",
-            ].map((gradient, index) => (
+              { cls: "bg-gradient-to-br from-rose-dusty-light to-rose-dusty/40", delay: "" },
+              { cls: "bg-gradient-to-br from-blue-soft-light to-blue-soft/50", delay: "translate-y-8" },
+              { cls: "bg-gradient-to-br from-cream-dark to-blue-soft-light/80", delay: "-translate-y-2" },
+              { cls: "bg-gradient-to-br from-rose-dusty/30 to-blue-soft-light", delay: "translate-y-6" },
+            ].map((item, index) => (
               <div
-                key={gradient}
-                className={`aspect-square rounded-[2rem] bg-gradient-to-br ${gradient} shadow-xl shadow-pink-100/50 ${index % 2 === 1 ? "translate-y-6" : ""}`}
+                key={index}
+                className={`aspect-square rounded-[2rem] shadow-lg shadow-rose-dusty/10 transition duration-500 hover:scale-[1.02] ${item.cls} ${item.delay}`}
               />
             ))}
+            <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-rose-dusty-light/30" />
           </div>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="mb-8 flex items-end justify-between gap-4">
+        <div className="mb-10 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-3xl font-bold text-slate-900">Категории</h2>
-            <p className="mt-2 text-slate-600">Выберите повод — мы подберём композицию</p>
+            <h2 className="text-3xl font-bold text-[#3d3a36]">Категории</h2>
+            <p className="mt-2 text-[#6b6560]">Выберите повод — мы подберём композицию</p>
           </div>
-          <Link href="/catalog" className="text-sm font-medium text-pink-600 hover:text-pink-700">
+          <Link
+            href="/catalog"
+            className="text-sm font-medium text-rose-dusty-dark transition hover:text-rose-dusty"
+          >
             Весь каталог →
           </Link>
         </div>
@@ -90,17 +106,12 @@ export default async function HomePage() {
             <Link
               key={category.id}
               href={`/catalog?category=${category.slug}`}
-              className="group rounded-3xl border border-pink-100 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+              className="group rounded-3xl border border-rose-dusty-light/50 bg-cream-card p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-rose-dusty-light hover:shadow-md hover:shadow-rose-dusty/10"
             >
-              <div className={`mb-4 h-24 rounded-2xl bg-gradient-to-br ${[
-                "from-pink-100 to-rose-200",
-                "from-sky-100 to-blue-200",
-                "from-violet-100 to-purple-200",
-                "from-amber-100 to-orange-200",
-                "from-emerald-100 to-teal-200",
-                "from-fuchsia-100 to-pink-200",
-              ][index % 6]}`} />
-              <h3 className="text-xl font-semibold text-slate-900 group-hover:text-pink-600">
+              <div
+                className={`mb-4 h-24 rounded-2xl bg-gradient-to-br ${categoryGradients[index % categoryGradients.length]} transition group-hover:opacity-90`}
+              />
+              <h3 className="text-xl font-semibold text-[#3d3a36] transition group-hover:text-rose-dusty-dark">
                 {category.name}
               </h3>
             </Link>
@@ -109,10 +120,10 @@ export default async function HomePage() {
       </section>
 
       {featured.length > 0 ? (
-        <section className="bg-white/70 py-16">
+        <section className="border-y border-rose-dusty-light/30 bg-cream-card/50 py-16">
           <div className="mx-auto max-w-6xl px-4 sm:px-6">
-            <h2 className="text-3xl font-bold text-slate-900">Популярное</h2>
-            <p className="mt-2 text-slate-600">Любимые композиции наших клиентов</p>
+            <h2 className="text-3xl font-bold text-[#3d3a36]">Популярное</h2>
+            <p className="mt-2 text-[#6b6560]">Любимые композиции наших клиентов</p>
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {featured.map((product) => (
                 <ProductCard key={product.id} product={product} />
@@ -123,16 +134,24 @@ export default async function HomePage() {
       ) : null}
 
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-        <div className="rounded-[2rem] bg-gradient-to-r from-pink-500 to-sky-500 p-8 text-white sm:p-12">
-          <h2 className="text-3xl font-bold">Заказ по согласованию</h2>
-          <p className="mt-4 max-w-2xl text-lg text-white/90">
-            Работаем из дома — каждый заказ обсуждаем лично: дата, адрес, цвета и бюджет.
-            Напишите в Telegram, VK или MAX — ответим быстро.
-          </p>
-          <div className="mt-6">
-            <Button asChild variant="secondary" size="lg">
-              <Link href="/how-to-order">Как оформить заказ</Link>
-            </Button>
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-rose-dusty/90 via-rose-dusty-dark/85 to-blue-soft-dark/80 p-8 text-cream sm:p-12">
+          <div className="cloud-orb cloud-orb-cream -right-10 -top-10 h-40 w-40 opacity-30" />
+          <div className="relative">
+            <h2 className="text-3xl font-bold">Заказ по согласованию</h2>
+            <p className="mt-4 max-w-2xl text-lg text-cream/90">
+              Работаем из дома — каждый заказ обсуждаем лично: дата, адрес, цвета и бюджет.
+              Напишите в Telegram, VK или MAX — ответим быстро.
+            </p>
+            <div className="mt-6">
+              <Button
+                asChild
+                variant="secondary"
+                size="lg"
+                className="bg-cream-card text-rose-dusty-dark hover:bg-cream"
+              >
+                <Link href="/how-to-order">Как оформить заказ</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

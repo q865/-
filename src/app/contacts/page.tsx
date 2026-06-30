@@ -12,8 +12,8 @@ export default async function ContactsPage() {
     <SiteShell>
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-slate-900">Контакты</h1>
-          <p className="mt-2 text-lg text-slate-600">
+          <h1 className="text-4xl font-bold text-[#3d3a36]">Контакты</h1>
+          <p className="mt-2 text-lg text-[#6b6560]">
             Напишите нам удобным способом — ответим и согласуем заказ
           </p>
         </div>
@@ -24,9 +24,9 @@ export default async function ContactsPage() {
               <CardHeader>
                 <CardTitle>{settings.siteName}</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4 text-slate-600">
+              <CardContent className="space-y-4 text-[#6b6560]">
                 <p>Москва · доставка и оформление по согласованию</p>
-                <p className="text-2xl font-bold text-slate-900">
+                <p className="text-2xl font-bold text-[#3d3a36]">
                   {formatPhone(settings.phone)}
                 </p>
                 <OrderButtons settings={settings} />
@@ -34,8 +34,8 @@ export default async function ContactsPage() {
             </Card>
 
             {!settings.maxUrl ? (
-              <div className="rounded-3xl bg-violet-50 p-6 text-violet-900">
-                <h3 className="font-semibold">Мессенджер MAX</h3>
+              <div className="rounded-3xl border border-blue-soft/30 bg-blue-soft-light/40 p-6 text-blue-soft-dark">
+                <h3 className="font-semibold text-[#3d3a36]">Мессенджер MAX</h3>
                 <p className="mt-2 text-sm">
                   Найдите нас в MAX по номеру {formatPhone(settings.phone)} или добавьте
                   ссылку на профиль в админке, когда она будет готова.

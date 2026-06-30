@@ -129,7 +129,7 @@ export function ProductForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-2xl space-y-5 rounded-2xl border border-pink-100 bg-white p-6 shadow-sm"
+      className="max-w-2xl space-y-5 rounded-2xl border border-rose-dusty-light/50 bg-cream-card p-6 shadow-sm"
     >
       <div className="space-y-2">
         <Label htmlFor="name">Название</Label>
@@ -153,7 +153,7 @@ export function ProductForm({
           }}
           placeholder="nabor-gender-pati"
         />
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#9c9590]">
           Адрес страницы: /product/{form.slug || "..."}
         </p>
       </div>
@@ -200,7 +200,7 @@ export function ProductForm({
 
       <div className="space-y-3">
         <Label htmlFor="photos">Фото</Label>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-[#9c9590]">
           Загрузите фото, затем обязательно нажмите «Сохранить» внизу формы.
         </p>
         <Input
@@ -214,13 +214,13 @@ export function ProductForm({
             e.target.value = "";
           }}
         />
-        {uploading ? <p className="text-sm text-slate-500">Загрузка...</p> : null}
+        {uploading ? <p className="text-sm text-[#9c9590]">Загрузка...</p> : null}
         {images.length > 0 ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {images.map((image) => (
               <div
                 key={image}
-                className="overflow-hidden rounded-xl border border-pink-100 bg-pink-50/40"
+                className="overflow-hidden rounded-xl border border-rose-dusty-light/50 bg-rose-dusty-light/20"
               >
                 <div className="relative aspect-square">
                   <ProductImage src={image} alt="" fill className="object-cover" sizes="120px" />
@@ -238,24 +238,24 @@ export function ProductForm({
             ))}
           </div>
         ) : (
-          <p className="text-sm text-slate-500">Фото пока не добавлены</p>
+          <p className="text-sm text-[#9c9590]">Фото пока не добавлены</p>
         )}
       </div>
 
-      <div className="flex flex-col gap-3 rounded-xl bg-pink-50/60 p-4">
-        <label className="flex cursor-pointer items-center gap-3 text-sm text-slate-700">
+      <div className="flex flex-col gap-3 rounded-xl bg-rose-dusty-light/25 p-4">
+        <label className="flex cursor-pointer items-center gap-3 text-sm text-[#5c5651]">
           <input
             type="checkbox"
-            className="h-4 w-4 rounded border-pink-200 text-pink-500"
+            className="h-4 w-4 rounded border-rose-dusty-light text-rose-dusty"
             checked={form.featured}
             onChange={(e) => setForm({ ...form, featured: e.target.checked })}
           />
           Показывать в блоке «Популярное»
         </label>
-        <label className="flex cursor-pointer items-center gap-3 text-sm text-slate-700">
+        <label className="flex cursor-pointer items-center gap-3 text-sm text-[#5c5651]">
           <input
             type="checkbox"
-            className="h-4 w-4 rounded border-pink-200 text-pink-500"
+            className="h-4 w-4 rounded border-rose-dusty-light text-rose-dusty"
             checked={form.published}
             onChange={(e) => setForm({ ...form, published: e.target.checked })}
           />

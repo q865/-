@@ -29,7 +29,7 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-2xl space-y-4 rounded-2xl border border-pink-100 bg-white p-6 shadow-sm"
+      className="max-w-2xl space-y-4 rounded-2xl border border-rose-dusty-light/50 bg-cream-card p-6 shadow-sm"
     >
       <div className="space-y-2">
         <Label htmlFor="siteName">Название сайта</Label>
@@ -81,7 +81,7 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
           onChange={(e) => setForm({ ...form, maxUrl: e.target.value })}
           placeholder="https://max.ru/u/..."
         />
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#9c9590]">
           Получите в приложении MAX: Профиль → QR-код → Поделиться
         </p>
       </div>

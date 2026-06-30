@@ -46,7 +46,7 @@ export function OrderButtons({
           </a>
         </Button>
       ) : (
-        <p className="rounded-2xl bg-violet-50 px-4 py-3 text-sm text-violet-800">
+        <p className="rounded-2xl bg-blue-soft-light/50 px-4 py-3 text-sm text-blue-soft-dark">
           Найдите нас в MAX по номеру {formatPhone(settings.phone)}
         </p>
       )}

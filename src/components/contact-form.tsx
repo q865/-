@@ -42,7 +42,7 @@ export function ContactForm({ productName }: { productName?: string }) {
 
   if (status === "success") {
     return (
-      <div className="rounded-3xl bg-emerald-50 p-6 text-emerald-800">
+      <div className="rounded-3xl border border-rose-dusty-light/50 bg-rose-dusty-light/30 p-6 text-rose-dusty-dark">
         <h3 className="font-semibold">Заявка отправлена!</h3>
         <p className="mt-2 text-sm">Мы свяжемся с вами в ближайшее время.</p>
         <Button

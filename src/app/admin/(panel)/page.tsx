@@ -22,8 +22,8 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-900">Обзор</h1>
-        <p className="mt-2 text-slate-500">Управление каталогом Air Cloud MSK</p>
+        <h1 className="text-3xl font-bold text-[#3d3a36]">Обзор</h1>
+        <p className="mt-2 text-[#9c9590]">Управление каталогом Air Cloud MSK</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
@@ -31,33 +31,33 @@ export default async function AdminDashboardPage() {
           <Link
             key={stat.label}
             href={stat.href}
-            className="rounded-2xl border border-pink-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-pink-200 hover:shadow-md"
+            className="rounded-2xl border border-rose-dusty-light/50 bg-cream-card p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-rose-dusty-light hover:shadow-md"
           >
-            <div className="text-3xl font-bold text-pink-600">{stat.value}</div>
-            <div className="mt-2 font-medium text-slate-600">{stat.label}</div>
+            <div className="text-3xl font-bold text-rose-dusty-dark">{stat.value}</div>
+            <div className="mt-2 font-medium text-[#6b6560]">{stat.label}</div>
           </Link>
         ))}
       </div>
 
-      <div className="rounded-2xl border border-pink-100 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-semibold text-slate-900">Последние заявки</h2>
+      <div className="rounded-2xl border border-rose-dusty-light/50 bg-cream-card p-6 shadow-sm">
+        <h2 className="text-xl font-semibold text-[#3d3a36]">Последние заявки</h2>
         {recentOrders.length === 0 ? (
-          <p className="mt-4 text-slate-500">Заявок пока нет</p>
+          <p className="mt-4 text-[#9c9590]">Заявок пока нет</p>
         ) : (
           <div className="mt-4 space-y-3">
             {recentOrders.map((order) => (
               <div
                 key={order.id}
-                className="rounded-xl border border-pink-50 bg-pink-50/40 p-4"
+                className="rounded-xl border border-rose-dusty-light/40 bg-rose-dusty-light/20 p-4"
               >
-                <div className="font-medium text-slate-900">
+                <div className="font-medium text-[#3d3a36]">
                   {order.name} · {order.phone}
                 </div>
                 {order.product ? (
-                  <div className="mt-1 text-sm text-slate-600">{order.product}</div>
+                  <div className="mt-1 text-sm text-[#6b6560]">{order.product}</div>
                 ) : null}
                 {order.message ? (
-                  <div className="mt-1 text-sm text-slate-500">{order.message}</div>
+                  <div className="mt-1 text-sm text-[#9c9590]">{order.message}</div>
                 ) : null}
               </div>
             ))}
