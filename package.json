@@ -9,6 +9,7 @@
     "lint": "eslint",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
+    "portfolio:download": "node scripts/download-portfolio-images.mjs",
     "postinstall": "prisma generate"
   },
   "prisma": {

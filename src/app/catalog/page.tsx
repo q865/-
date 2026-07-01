@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteShell } from "@/components/layout/site-shell";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { CategoryFilter } from "@/components/catalog/category-filter";
 import { ProductCard } from "@/components/product-card";
 import { StaggerGrid } from "@/components/motion/stagger-grid";
+import { productGridClassName } from "@/components/ui/product-grid";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { prisma } from "@/lib/prisma";
 import { getCategories } from "@/lib/queries/categories";
@@ -63,10 +65,6 @@ export default async function CatalogPage({
     orderBy: { createdAt: "desc" },
   });
 
-  const chipActive = "bg-rose-dusty text-white shadow-sm";
-  const chipIdle =
-    "border border-neutral-border bg-neutral-surface text-[#6b6560] hover:border-rose-dusty-light hover:text-rose-dusty-dark";
-
   const breadcrumbItems = [
     { name: "Главная", href: "/" },
     { name: "Каталог", href: "/catalog", current: !activeCategory },
@@ -83,57 +81,48 @@ export default async function CatalogPage({
 
   return (
     <SiteShell>
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-        <Breadcrumbs items={breadcrumbItems} />
-
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-text">
-            Каталог
-          </p>
-          <h1 className="mt-2 text-4xl font-bold text-[#3d3a36]">
-            {activeCategory ? activeCategory.name : "Шары с гелием"}
-          </h1>
-          <p className="mt-2 text-[#6b6560]">
-            {activeCategory
-              ? `Композиции для «${activeCategory.name.toLowerCase()}» — ${products.length} ${products.length === 1 ? "вариант" : products.length < 5 ? "варианта" : "вариантов"}`
-              : "Композиции из гелевых шаров на любой праздник в Москве"}
-          </p>
+      <div className="page-container pb-8 pt-5 sm:section-spacing sm:pb-14">
+        <div className="hidden sm:block">
+          <Breadcrumbs items={breadcrumbItems} />
         </div>
 
-        <div className="sticky top-[7.5rem] z-30 -mx-4 mb-8 border-b border-neutral-border bg-cream/90 px-4 py-3 backdrop-blur-md sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
-          <div className="flex flex-wrap gap-2">
-            <Link
-              href="/catalog"
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${!categorySlug ? chipActive : chipIdle}`}
-            >
-              Все
-            </Link>
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/catalog?category=${category.slug}`}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                  categorySlug === category.slug ? chipActive : chipIdle
-                }`}
-              >
-                {category.name}
-              </Link>
-            ))}
+        <div className="mb-4 flex items-start justify-between gap-3 sm:mb-6">
+          <div className="min-w-0">
+            <p className="section-kicker hidden sm:block">Каталог</p>
+            <h1 className="heading-catalog sm:mt-2">
+              {activeCategory ? activeCategory.name : "Каталог"}
+            </h1>
+            <p className="mt-1 hidden text-sm text-muted sm:block md:text-base">
+              {activeCategory
+                ? "Композиции из гелевых шаров с доставкой по Москве"
+                : "Композиции из гелевых шаров на любой праздник в Москве"}
+            </p>
           </div>
+          <p className="hidden shrink-0 rounded-full bg-rose-dusty-light/50 px-3 py-1.5 text-xs font-semibold text-rose-dusty-dark sm:block">
+            {products.length}{" "}
+            {products.length === 1 ? "товар" : products.length < 5 ? "товара" : "товаров"}
+          </p>
         </div>
+
+        <CategoryFilter
+          categories={categories}
+          activeSlug={categorySlug}
+          productCount={products.length}
+        />
 
         {products.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-neutral-border bg-neutral-surface p-12 text-center text-[#6b6560]">
-            <p>В этой категории пока нет товаров.</p>
+          <div className="rounded-3xl border border-dashed border-neutral-border bg-neutral-surface/80 p-8 text-center text-muted sm:p-12">
+            <p className="font-medium text-foreground">В этой категории пока нет товаров</p>
+            <p className="mt-2 text-sm">Выберите другую категорию или напишите нам — соберём под заказ</p>
             <Link
               href="/catalog"
-              className="mt-4 inline-block text-sm font-medium text-rose-dusty-dark hover:text-rose-dusty"
+              className="touch-target mt-5 inline-flex rounded-full bg-rose-dusty px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-rose-dusty-dark"
             >
-              Смотреть весь каталог →
+              Смотреть весь каталог
             </Link>
           </div>
         ) : (
-          <StaggerGrid className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <StaggerGrid className={productGridClassName}>
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

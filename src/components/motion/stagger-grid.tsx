@@ -1,8 +1,14 @@
 "use client";
 
 import { Children, cloneElement, isValidElement, type ReactNode } from "react";
+import { useIsMobileViewport } from "@/hooks/use-is-mobile-viewport";
 import { cn } from "@/lib/utils";
-import { STAGGER_MAX_DELAY_MS, STAGGER_STEP_MS } from "@/lib/animation-config";
+import {
+  STAGGER_MAX_DELAY_MS,
+  STAGGER_MAX_DELAY_MS_MOBILE,
+  STAGGER_STEP_MS,
+  STAGGER_STEP_MS_MOBILE,
+} from "@/lib/animation-config";
 
 type StaggerGridProps = {
   children: ReactNode;
@@ -14,6 +20,10 @@ type StaggerGridProps = {
  * Оборачивает grid/flex-контейнер и анимирует прямых потомков без лишних div.
  */
 export function StaggerGrid({ children, className }: StaggerGridProps) {
+  const isMobile = useIsMobileViewport();
+  const step = isMobile ? STAGGER_STEP_MS_MOBILE : STAGGER_STEP_MS;
+  const maxDelay = isMobile ? STAGGER_MAX_DELAY_MS_MOBILE : STAGGER_MAX_DELAY_MS;
+
   return (
     <div className={className}>
       {Children.map(children, (child, index) => {
@@ -25,7 +35,7 @@ export function StaggerGrid({ children, className }: StaggerGridProps) {
           className: cn(child.props.className, "animate-fade-in-up motion-reduce:animate-none"),
           style: {
             ...child.props.style,
-            animationDelay: `${Math.min(index * STAGGER_STEP_MS, STAGGER_MAX_DELAY_MS)}ms`,
+            animationDelay: `${Math.min(index * step, maxDelay)}ms`,
           },
         });
       })}

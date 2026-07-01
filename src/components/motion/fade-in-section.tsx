@@ -1,6 +1,8 @@
 "use client";
 
 import { type ReactNode } from "react";
+import { useIsMobileViewport } from "@/hooks/use-is-mobile-viewport";
+import { FADE_IN_MAX_DELAY_MS_MOBILE } from "@/lib/animation-config";
 import { cn } from "@/lib/utils";
 
 type FadeInProps = {
@@ -17,10 +19,13 @@ export function FadeIn({
   delayMs = 0,
   as: Tag = "div",
 }: FadeInProps) {
+  const isMobile = useIsMobileViewport();
+  const resolvedDelay = isMobile ? Math.min(delayMs, FADE_IN_MAX_DELAY_MS_MOBILE) : delayMs;
+
   return (
     <Tag
       className={cn("animate-fade-in-up motion-reduce:animate-none", className)}
-      style={{ animationDelay: `${delayMs}ms` }}
+      style={{ animationDelay: `${resolvedDelay}ms` }}
     >
       {children}
     </Tag>

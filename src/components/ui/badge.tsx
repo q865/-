@@ -7,7 +7,7 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-neutral-muted text-[#6b6560]",
+        default: "bg-neutral-muted text-muted",
         promo: "bg-rose-dusty text-white shadow-sm",
       },
     },

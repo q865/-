@@ -48,7 +48,8 @@ export function ContactForm({ productName }: { productName?: string }) {
         <Button
           type="button"
           variant="outline"
-          className="mt-4"
+          size="lg"
+          className="mt-4 w-full"
           onClick={() => setStatus("idle")}
         >
           Отправить ещё
@@ -64,6 +65,7 @@ export function ContactForm({ productName }: { productName?: string }) {
         <Input
           id="name"
           required
+          autoComplete="name"
           value={form.name}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           placeholder="Анна"
@@ -75,6 +77,8 @@ export function ContactForm({ productName }: { productName?: string }) {
           id="phone"
           required
           type="tel"
+          inputMode="tel"
+          autoComplete="tel"
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
           placeholder="+7 (999) 123-45-67"
@@ -92,7 +96,7 @@ export function ContactForm({ productName }: { productName?: string }) {
       {status === "error" ? (
         <p className="text-sm text-red-600">Не удалось отправить. Попробуйте позже или напишите в Telegram.</p>
       ) : null}
-      <Button type="submit" className="w-full" disabled={status === "loading"}>
+      <Button type="submit" size="lg" className="scroll-mt-24 w-full" disabled={status === "loading"}>
         {status === "loading" ? "Отправка..." : "Отправить заявку"}
       </Button>
     </form>

@@ -8,6 +8,8 @@ import { JsonLd } from "@/components/home/json-ld";
 import { OrderButtons } from "@/components/order-buttons";
 import { ProductCard } from "@/components/product-card";
 import { StaggerGrid } from "@/components/motion/stagger-grid";
+import { cn, formatPrice, getProductGallery } from "@/lib/utils";
+import { productGridClassName } from "@/components/ui/product-grid";
 import { ProductGallery } from "@/components/product-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +18,6 @@ import { getPublishedProductBySlug, getRelatedProducts } from "@/lib/queries/pro
 import { getSettings } from "@/lib/queries/settings";
 import { buildProductJsonLd } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site-config";
-import { formatPrice, getProductGallery } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -57,13 +58,16 @@ export default async function ProductPage({ params }: { params: Params }) {
     getRelatedProducts(product.categoryId, product.id),
   ]);
 
-  const gallery = getProductGallery(product.images);
+  const gallery = getProductGallery(product.images, {
+    slug: product.slug,
+    categorySlug: product.category.slug,
+  });
 
   return (
     <SiteShell>
       <JsonLd data={buildProductJsonLd(product)} />
 
-      <div className="page-container py-12">
+      <div className="page-container section-spacing">
         <Breadcrumbs
           items={[
             { name: "Главная", href: "/" },
@@ -73,23 +77,27 @@ export default async function ProductPage({ params }: { params: Params }) {
           ]}
         />
 
-        <div className="grid gap-10 lg:grid-cols-2">
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
           <ProductGallery images={gallery} alt={product.name} />
 
-          <div className="space-y-6">
+          <div className="space-y-5 sm:space-y-6">
             <div>
               <Link href={`/catalog?category=${product.category.slug}`} className="inline-block">
-                <Badge>{product.category.name}</Badge>
+                <Badge className="min-h-11 px-3 py-2">{product.category.name}</Badge>
               </Link>
-              <h1 className="mt-3 text-4xl font-bold text-foreground">{product.name}</h1>
-              <p className="mt-4 text-3xl font-bold text-foreground">от {formatPrice(product.price)}</p>
+              <h1 className="heading-page mt-3">{product.name}</h1>
+              <p className="mt-3 text-2xl font-bold text-foreground sm:mt-4 sm:text-3xl">
+                от {formatPrice(product.price)}
+              </p>
               <p className="mt-2 text-sm text-muted">
                 Точная стоимость зависит от размера и дополнений — согласуем при заказе
               </p>
             </div>
 
             {product.description ? (
-              <p className="text-lg leading-8 text-muted">{product.description}</p>
+              <p className="text-base leading-7 text-muted sm:text-lg sm:leading-8">
+                {product.description}
+              </p>
             ) : null}
 
             <Card>
@@ -97,7 +105,7 @@ export default async function ProductPage({ params }: { params: Params }) {
                 <CardTitle>Оформить заказ</CardTitle>
               </CardHeader>
               <CardContent>
-                <OrderButtons settings={settings} productName={product.name} />
+                <OrderButtons compact settings={settings} productName={product.name} />
               </CardContent>
             </Card>
 
@@ -113,12 +121,15 @@ export default async function ProductPage({ params }: { params: Params }) {
         </div>
 
         {relatedProducts.length > 0 ? (
-          <section aria-labelledby="related-heading" className="mt-16 border-t border-neutral-border pt-16">
+          <section
+            aria-labelledby="related-heading"
+            className="mt-10 border-t border-neutral-border pt-10 sm:mt-16 sm:pt-16"
+          >
             <h2 id="related-heading" className="heading-section">
               Похожие композиции
             </h2>
             <p className="mt-2 text-muted">Ещё варианты из категории «{product.category.name}»</p>
-            <StaggerGrid className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <StaggerGrid className={cn(productGridClassName, "mt-10")}>
               {relatedProducts.map((item) => (
                 <ProductCard key={item.id} product={item} />
               ))}

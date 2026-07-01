@@ -21,13 +21,16 @@ export function SocialLinks({
   settings: SiteSettings;
   className?: string;
 }) {
+  const iconClass =
+    "icon-hover-bounce inline-flex h-11 w-11 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300";
+
   return (
     <div className={className}>
       <a
         href={settings.telegramUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="icon-hover-bounce inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-blue-soft-light hover:text-blue-soft-dark"
+        className={`${iconClass} hover:bg-blue-soft-light hover:text-blue-soft-dark`}
         aria-label="Telegram"
       >
         <Send className="h-4 w-4" />
@@ -36,7 +39,7 @@ export function SocialLinks({
         href={settings.vkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="icon-hover-bounce inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-rose-dusty-light hover:text-rose-dusty-dark"
+        className={`${iconClass} hover:bg-rose-dusty-light hover:text-rose-dusty-dark`}
         aria-label="ВКонтакте"
       >
         <VkIcon className="h-4 w-4" />
@@ -46,7 +49,7 @@ export function SocialLinks({
           href={settings.maxUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="icon-hover-bounce inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-rose-dusty-light/60"
+          className={`${iconClass} hover:bg-rose-dusty-light/60`}
           aria-label="MAX"
         >
           <MaxIcon className="h-4 w-4" />
@@ -54,7 +57,7 @@ export function SocialLinks({
       ) : null}
       <a
         href={buildTelUrl(settings.phone)}
-        className="icon-hover-bounce inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-rose-dusty-light hover:text-rose-dusty-dark"
+        className={`${iconClass} hover:bg-rose-dusty-light hover:text-rose-dusty-dark`}
         aria-label="Позвонить"
       >
         <Phone className="h-4 w-4" />
@@ -66,42 +69,60 @@ export function SocialLinks({
 export function Header({ settings }: { settings: SiteSettings }) {
   const links = [
     { href: "/catalog", label: "Каталог" },
-    { href: "/how-to-order", label: "Как заказать" },
+    { href: "/services", label: "Услуги", shortLabel: "Услуги" },
+    { href: "/how-to-order", label: "Как заказать", shortLabel: "Заказ" },
     { href: "/contacts", label: "Контакты" },
   ];
 
+  const navPillClass =
+    "flex min-h-11 items-center justify-center rounded-2xl border border-neutral-border bg-neutral-muted px-2 text-center text-xs font-semibold leading-tight text-muted sm:text-sm";
+
   return (
     <header className="sticky top-0 z-50 bg-neutral-surface">
-      <div className="border-b border-neutral-border bg-cream/80">
+      <div className="hidden border-b border-neutral-border bg-cream/80 sm:block">
         <div className="page-container flex items-center justify-between gap-4 py-2 text-sm">
-          <p className="hidden text-muted sm:block">Сделайте праздник ярче</p>
-          <a href={buildTelUrl(settings.phone)} className="ml-auto font-semibold text-foreground transition hover:text-rose-dusty-dark">
+          <p className="text-muted">Сделайте праздник ярче</p>
+          <a
+            href={buildTelUrl(settings.phone)}
+            className="touch-target py-1 font-semibold text-foreground transition hover:text-rose-dusty-dark"
+          >
             {formatPhone(settings.phone)}
           </a>
         </div>
       </div>
 
       <div className="border-b border-neutral-border bg-neutral-surface/95 backdrop-blur-lg">
-        <div className="page-container flex items-center justify-between gap-4 py-3">
-          <Link href="/" className="group flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-rose-dusty to-blue-soft text-white shadow-sm">
-              <MessageCircle className="h-5 w-5" />
+        <div className="page-container flex items-center justify-between gap-3 py-2.5 sm:gap-4 sm:py-3">
+          <Link href="/" className="group flex min-w-0 flex-1 items-center gap-2.5 sm:gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-rose-dusty to-blue-soft text-white shadow-sm sm:h-10 sm:w-10">
+              <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <div>
-              <div className="text-lg font-bold text-foreground">{settings.siteName}</div>
-              <div className="text-xs text-neutral-text">Гелевые шары · Москва</div>
+            <div className="min-w-0">
+              <div className="truncate text-base font-bold text-foreground sm:text-lg">{settings.siteName}</div>
+              <div className="truncate text-[11px] text-neutral-text sm:text-xs">Гелевые шары · Москва</div>
             </div>
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
             {links.map((link) => (
-              <Link key={link.href} href={link.href} className="text-sm font-medium text-muted transition hover:text-rose-dusty-dark">
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-muted transition hover:text-rose-dusty-dark"
+              >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <a
+              href={buildTelUrl(settings.phone)}
+              className="icon-hover-bounce inline-flex h-10 w-10 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-rose-dusty-light hover:text-rose-dusty-dark sm:hidden"
+              aria-label={`Позвонить ${formatPhone(settings.phone)}`}
+            >
+              <Phone className="h-4 w-4" />
+            </a>
             <SocialLinks settings={settings} className="hidden items-center gap-1.5 sm:flex" />
             <Button asChild size="sm" className="hidden sm:inline-flex">
               <Link href="/catalog">Заказать</Link>
@@ -109,19 +130,13 @@ export function Header({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
 
-        <nav className="flex gap-2 overflow-x-auto border-t border-neutral-border px-4 py-2.5 md:hidden">
+        <nav className="page-container grid grid-cols-2 gap-2 border-t border-neutral-border py-2 sm:grid-cols-4 md:hidden">
           {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="whitespace-nowrap rounded-full border border-neutral-border bg-neutral-muted px-4 py-1.5 text-sm font-medium text-muted"
-            >
-              {link.label}
+            <Link key={link.href} href={link.href} className={navPillClass}>
+              <span className="sm:hidden">{link.shortLabel ?? link.label}</span>
+              <span className="hidden sm:inline">{link.label}</span>
             </Link>
           ))}
-          <Link href="/catalog" className="whitespace-nowrap rounded-full bg-rose-dusty px-4 py-1.5 text-sm font-medium text-white">
-            Заказать
-          </Link>
         </nav>
       </div>
     </header>

@@ -52,3 +52,4 @@ dev.db
 # uploaded product photos
 /public/uploads/*
 !/public/uploads/.gitkeep
+!/public/uploads/portfolio/

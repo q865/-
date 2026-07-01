@@ -18,6 +18,11 @@ export const STAGGER_STEP_MS = 70;
 /** Максимальная задержка stagger, чтобы не ждать слишком долго */
 export const STAGGER_MAX_DELAY_MS = 420;
 
+/** Mobile (<sm): быстрее появление карточек */
+export const STAGGER_STEP_MS_MOBILE = 40;
+export const STAGGER_MAX_DELAY_MS_MOBILE = 200;
+export const FADE_IN_MAX_DELAY_MS_MOBILE = 80;
+
 /** Смещение при fade-in-up (px) */
 export const FADE_IN_OFFSET_PX = 20;
 

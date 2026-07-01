@@ -14,8 +14,10 @@ import { FadeIn } from "@/components/motion/fade-in-section";
 import { StaggerGrid } from "@/components/motion/stagger-grid";
 import { OrderButtons } from "@/components/order-buttons";
 import { ProductCard } from "@/components/product-card";
+import { HeroShowcase } from "@/components/home/hero-showcase";
 import { ProductImage } from "@/components/product-image";
 import { Button } from "@/components/ui/button";
+import { productGridClassName } from "@/components/ui/product-grid";
 import {
   advantages,
   faqItems,
@@ -36,7 +38,9 @@ import {
 } from "@/lib/seo";
 import { buildTelegramOrderUrl, buildTelUrl } from "@/lib/contact-links";
 import { SITE_KEYWORDS, SITE_URL } from "@/lib/site-config";
-import { formatPhone, getProductCoverImage } from "@/lib/utils";
+import { cn, formatPhone } from "@/lib/utils";
+import { resolveStockImage } from "@/lib/stock-images";
+import { businessServices } from "@/lib/services-content";
 
 export const dynamic = "force-dynamic";
 
@@ -61,9 +65,10 @@ export default async function HomePage() {
     getPublishedProducts(),
   ]);
 
-  const featured = products.filter((product) => product.featured).slice(0, 8);
-  const showcaseProducts = featured.length > 0 ? featured : products.slice(0, 8);
-  const heroImages = products.slice(0, 4);
+  const featured = products.filter((product) => product.featured);
+  const showcaseProducts = featured.length > 0 ? featured.slice(0, 8) : products.slice(0, 8);
+  const heroProducts =
+    featured.length > 0 ? featured.slice(0, 4) : products.slice(0, 4);
 
   const structuredData = [
     buildLocalBusinessJsonLd(settings),
@@ -76,7 +81,7 @@ export default async function HomePage() {
     <SiteShell>
       <JsonLd data={structuredData} />
 
-      <section aria-labelledby="hero-heading" className="relative overflow-hidden border-b border-neutral-border bg-neutral-surface">
+      <section aria-labelledby="hero-heading" className="relative overflow-x-hidden border-b border-neutral-border bg-neutral-surface">
         <div className="floating-orb -left-16 top-8 h-48 w-48 bg-rose-dusty-light/60 animate-float-gentle" />
         <div
           className="floating-orb right-0 top-12 h-40 w-40 bg-lavender-soft/70 animate-float-gentle"
@@ -87,24 +92,28 @@ export default async function HomePage() {
           style={{ animationDelay: "4s" }}
         />
 
-        <div className="page-container relative grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
-          <FadeIn className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-rose-dusty-light/50 bg-rose-dusty-light/40 px-4 py-2 text-sm font-medium text-rose-dusty-dark shadow-sm">
-              <Sparkles className="h-4 w-4" aria-hidden />
-              Гелевые шары с доставкой по Москве
+        <div className="page-container relative grid gap-6 py-8 sm:gap-8 sm:py-10 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-16">
+          <HeroShowcase products={heroProducts} />
+
+          <FadeIn className="order-2 space-y-4 lg:order-1 lg:space-y-5">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-rose-dusty-light/50 bg-rose-dusty-light/40 px-3 py-2 text-xs font-medium text-rose-dusty-dark shadow-sm sm:px-4 sm:text-sm">
+              <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
+              <span className="leading-snug">Гелевые шары · доставка по Москве</span>
             </div>
             <h1 id="hero-heading" className="heading-display">
               {settings.heroTitle}
             </h1>
-            <p className="max-w-xl text-lg leading-8 text-muted">{settings.heroSubtitle}</p>
-            <div className="flex flex-wrap gap-3">
-              <Button asChild size="lg">
+            <p className="max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
+              {settings.heroSubtitle}
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button asChild size="lg" className="w-full sm:w-auto">
                 <Link href="/catalog">
                   Смотреть каталог
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
               </Button>
-              <Button asChild variant="secondary" size="lg">
+              <Button asChild variant="secondary" size="lg" className="hidden w-full sm:inline-flex sm:w-auto">
                 <a
                   href={buildTelegramOrderUrl(settings.telegramUrl)}
                   target="_blank"
@@ -115,30 +124,6 @@ export default async function HomePage() {
               </Button>
             </div>
           </FadeIn>
-
-          {heroImages.length > 0 ? (
-            <FadeIn delayMs={120} className="grid grid-cols-2 gap-3 sm:gap-4">
-              {heroImages.map((product, index) => (
-                <Link
-                  key={product.id}
-                  href={`/product/${product.slug}`}
-                  className={`premium-card group overflow-hidden ${
-                    index === 1 ? "translate-y-4" : index === 3 ? "-translate-y-2" : ""
-                  }`}
-                >
-                  <div className="relative aspect-square overflow-hidden bg-neutral-muted">
-                    <ProductImage
-                      src={getProductCoverImage(product.images)}
-                      alt={`${product.name} — гелевые шары ${product.category.name}`}
-                      fill
-                      className="object-cover transition-transform duration-500 ease-out [@media(hover:hover)]:group-hover:scale-[1.03]"
-                      sizes="(max-width: 1024px) 50vw, 25vw"
-                    />
-                  </div>
-                </Link>
-              ))}
-            </FadeIn>
-          ) : null}
         </div>
       </section>
 
@@ -153,36 +138,42 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="categories-heading" className="page-container py-16">
-        <div className="mb-8 flex items-end justify-between gap-4">
+      <section aria-labelledby="categories-heading" className="page-container section-spacing">
+        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="section-kicker">Каталог</p>
             <h2 id="categories-heading" className="heading-section mt-2">
               Шары по коллекциям
             </h2>
           </div>
-          <Link href="/catalog" className="link-accent text-sm font-medium">
+          <Link href="/catalog" className="link-accent touch-target py-1 text-sm font-medium">
             Весь каталог →
           </Link>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {categories.map((category) => (
             <Link
               key={category.id}
               href={`/catalog?category=${category.slug}`}
-              className="group flex items-center gap-4 rounded-2xl border border-neutral-border bg-neutral-surface px-5 py-4 shadow-sm transition hover:border-rose-dusty-light hover:shadow-md"
+              className="group premium-card flex items-center gap-4 overflow-hidden p-3 sm:p-4"
             >
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-neutral-muted text-lg font-bold text-neutral-text transition group-hover:bg-rose-dusty-light/40 group-hover:text-rose-dusty-dark">
-                {category.name.charAt(0)}
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-neutral-muted sm:h-20 sm:w-20">
+                <ProductImage
+                  src={resolveStockImage({ categorySlug: category.slug })}
+                  alt={category.name}
+                  fill
+                  sizes="80px"
+                  className="object-cover transition-transform duration-300 [@media(hover:hover)]:group-hover:scale-105"
+                />
               </div>
-              <h3 className="text-lg font-semibold text-foreground">{category.name}</h3>
+              <h3 className="text-base font-semibold text-foreground sm:text-lg">{category.name}</h3>
             </Link>
           ))}
         </div>
       </section>
 
       {showcaseProducts.length > 0 ? (
-        <section aria-labelledby="products-heading" className="border-y border-neutral-border bg-neutral-muted/60 py-16">
+        <section aria-labelledby="products-heading" className="border-y border-neutral-border bg-neutral-muted/60 section-spacing">
           <div className="page-container">
             <p className="section-kicker">{featured.length > 0 ? "Популярное" : "Каталог"}</p>
             <h2 id="products-heading" className="heading-section mt-2">
@@ -192,7 +183,7 @@ export default async function HomePage() {
               Готовые идеи с ориентировочной ценой — точную стоимость согласуем после обсуждения
               деталей заказа.
             </p>
-            <StaggerGrid className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <StaggerGrid className={cn(productGridClassName, "mt-10")}>
               {showcaseProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -206,7 +197,7 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <section aria-labelledby="occasions-heading" className="page-container py-16">
+      <section aria-labelledby="occasions-heading" className="page-container section-spacing">
         <p className="section-kicker">Поводы</p>
         <h2 id="occasions-heading" className="heading-section mt-2">
           Оформление шарами на любой праздник
@@ -225,7 +216,54 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="advantages-heading" className="border-y border-neutral-border bg-neutral-surface py-16">
+      <section aria-labelledby="business-heading" className="border-y border-neutral-border bg-neutral-muted/50 section-spacing">
+        <div className="page-container">
+          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="section-kicker">Для бизнеса</p>
+              <h2 id="business-heading" className="heading-section mt-2">
+                Витрины, открытия и корпоративы
+              </h2>
+              <p className="mt-2 max-w-xl text-muted">
+                Оформление для магазинов, ТЦ, офисов и промо — под бренд и бюджет.
+              </p>
+            </div>
+            <Link href="/services" className="link-accent touch-target py-1 text-sm font-medium">
+              Все услуги для бизнеса →
+            </Link>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {businessServices.slice(0, 4).map((service) => (
+              <Link
+                key={service.slug}
+                href={service.href}
+                className="premium-card group flex gap-4 overflow-hidden p-4"
+              >
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-neutral-muted sm:h-24 sm:w-24">
+                  <ProductImage
+                    src={resolveStockImage({ slug: service.slug, categorySlug: "biznes-i-meropriyatiya" })}
+                    alt={service.title}
+                    fill
+                    sizes="96px"
+                    className="object-cover transition-transform duration-300 [@media(hover:hover)]:group-hover:scale-105"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-semibold text-foreground">{service.title}</h3>
+                  <p className="mt-1 line-clamp-2 text-sm leading-snug text-muted">{service.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Button asChild variant="outline">
+              <Link href="/catalog?category=biznes-i-meropriyatiya">Каталог для бизнеса</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="advantages-heading" className="border-y border-neutral-border bg-neutral-surface section-spacing">
         <div className="page-container">
           <p className="section-kicker">О нас</p>
           <h2 id="advantages-heading" className="heading-section mt-2">
@@ -245,7 +283,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="steps-heading" className="page-container py-16">
+      <section aria-labelledby="steps-heading" className="page-container section-spacing">
         <p className="section-kicker">Заказ</p>
         <h2 id="steps-heading" className="heading-section mt-2">
           Как заказать гелевые шары
@@ -264,7 +302,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="faq-heading" className="border-y border-neutral-border bg-neutral-muted/40 py-16">
+      <section aria-labelledby="faq-heading" className="border-y border-neutral-border bg-neutral-muted/40 section-spacing">
         <div className="page-container-narrow">
           <p className="section-kicker">FAQ</p>
           <h2 id="faq-heading" className="heading-section mt-2">
@@ -273,7 +311,7 @@ export default async function HomePage() {
           <div className="mt-8 space-y-3">
             {faqItems.map((item) => (
               <details key={item.question} className="group rounded-2xl border border-neutral-border bg-neutral-surface px-5 py-4 shadow-sm">
-                <summary className="cursor-pointer list-none font-semibold text-foreground marker:content-none [&::-webkit-details-marker]:hidden">
+                <summary className="touch-target min-h-11 cursor-pointer list-none font-semibold text-foreground marker:content-none [&::-webkit-details-marker]:hidden">
                   {item.question}
                 </summary>
                 <p className="mt-3 text-sm leading-7 text-muted">{item.answer}</p>
@@ -283,11 +321,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="promo-heading" className="page-container py-16">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-dusty via-rose-dusty-dark to-blue-soft-dark p-8 text-white sm:p-12">
+      <section aria-labelledby="promo-heading" className="page-container section-spacing">
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-dusty via-rose-dusty-dark to-blue-soft-dark p-6 text-white sm:p-12">
           <div className="relative max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">Акция</p>
-            <h2 id="promo-heading" className="mt-2 text-3xl font-bold">
+            <p className="section-kicker text-white/70">Акция</p>
+            <h2 id="promo-heading" className="heading-section mt-2 text-white">
               Заказ по согласованию — удобно и прозрачно
             </h2>
             <p className="mt-4 text-lg text-white/90">
@@ -305,40 +343,54 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="contact-heading" className="page-container pb-8">
-        <div className="grid gap-8 rounded-2xl border border-neutral-border bg-neutral-surface p-8 lg:grid-cols-2">
-          <div>
+      <section aria-labelledby="contact-heading" className="page-container pb-10 sm:pb-14">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-12">
+          <div className="space-y-4">
             <p className="section-kicker">Связь</p>
-            <h2 id="contact-heading" className="heading-section mt-2">
+            <h2 id="contact-heading" className="heading-section">
               Закажите оформление прямо сейчас
             </h2>
-            <p className="mt-3 text-muted">
+            <p className="text-muted leading-7">
               Позвоните или напишите — поможем подобрать композицию и рассчитаем стоимость с
               доставкой по Москве.
             </p>
-            <div className="mt-5 flex flex-wrap items-center gap-4">
-              <a href={buildTelUrl(settings.phone)} className="inline-flex items-center gap-2 text-lg font-bold text-foreground hover:text-rose-dusty-dark">
-                <Phone className="h-5 w-5" aria-hidden />
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+              <a
+                href={buildTelUrl(settings.phone)}
+                className="touch-target inline-flex items-center gap-2 py-1 text-xl font-bold text-foreground hover:text-rose-dusty-dark sm:text-lg"
+              >
+                <Phone className="h-5 w-5 shrink-0" aria-hidden />
                 {formatPhone(settings.phone)}
               </a>
               <span className="inline-flex items-center gap-2 text-sm text-muted">
-                <Truck className="h-4 w-4" aria-hidden />
+                <Truck className="h-4 w-4 shrink-0" aria-hidden />
                 Доставка по согласованию
               </span>
             </div>
           </div>
-          <div className="rounded-2xl border border-neutral-border bg-neutral-muted/40 p-6">
-            <div className="mb-4 flex items-center gap-2 font-semibold text-foreground">
-              <MessageCircle className="h-5 w-5 text-rose-dusty-dark" aria-hidden />
-              Быстрый заказ
+
+          <div className="rounded-3xl bg-neutral-muted/50 p-6 sm:p-8">
+            <div className="mb-5 flex items-center gap-2.5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-dusty-light/60 text-rose-dusty-dark">
+                <MessageCircle className="h-5 w-5" aria-hidden />
+              </span>
+              <div>
+                <p className="font-semibold text-foreground">Быстрый заказ</p>
+                <p className="text-xs text-muted">Ответим в мессенджере или по телефону</p>
+              </div>
             </div>
-            <OrderButtons settings={settings} />
+            <OrderButtons
+              compact
+              hideTelegramOnMobile
+              showMaxNote
+              settings={settings}
+            />
           </div>
         </div>
       </section>
 
-      <section aria-labelledby="seo-text-heading" className="page-container pb-16">
-        <div className="rounded-2xl border border-neutral-border bg-neutral-muted/30 p-8 sm:p-10">
+      <section aria-labelledby="seo-text-heading" className="page-container pb-12 sm:pb-16">
+        <div className="rounded-2xl border border-neutral-border bg-neutral-muted/30 p-6 sm:p-10">
           <h2 id="seo-text-heading" className="sr-only">
             О доставке гелевых шаров в Москве
           </h2>

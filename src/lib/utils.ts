@@ -1,5 +1,9 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import {
+  resolveStockImage,
+  type ProductImageContext,
+} from "@/lib/stock-images";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -54,17 +58,28 @@ export function isPlaceholderImage(url: string): boolean {
   return url.includes("placeholder");
 }
 
-/** Первое реальное фото или заглушка для карточки/обложки */
-export function getProductCoverImage(images: string): string {
-  const list = parseImages(images);
-  const real = list.find((item) => !isPlaceholderImage(item));
-  return real ?? PLACEHOLDER;
+function getUploadedImages(images: string): string[] {
+  return parseImages(images).filter((item) => !isPlaceholderImage(item));
 }
 
-/** Галерея без заглушек; если фото нет — одна заглушка */
-export function getProductGallery(images: string): string[] {
-  const list = parseImages(images).filter((item) => !isPlaceholderImage(item));
-  return list.length > 0 ? list : [PLACEHOLDER];
+/** Обложка: загруженное фото → stock по slug/категории. */
+export function getProductCoverImage(
+  images: string,
+  context?: ProductImageContext,
+): string {
+  const uploaded = getUploadedImages(images);
+  if (uploaded.length > 0) return uploaded[0];
+  return resolveStockImage(context);
+}
+
+/** Галерея: загруженные фото или одно stock-изображение. */
+export function getProductGallery(
+  images: string,
+  context?: ProductImageContext,
+): string[] {
+  const uploaded = getUploadedImages(images);
+  if (uploaded.length > 0) return uploaded;
+  return [resolveStockImage(context)];
 }
 
 export function stringifyImages(images: string[]): string {

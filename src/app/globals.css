@@ -18,8 +18,10 @@
   --neutral-muted: #f5f4f2;
   --neutral-border: #ebe8e4;
   --neutral-text: #8a8480;
-  --shadow-float: 0 4px 24px rgba(61, 58, 54, 0.06);
-  --shadow-float-hover: 0 14px 40px rgba(196, 160, 160, 0.16);
+  --header-offset: 7.25rem;
+  --shadow-float: 0 4px 20px rgba(61, 58, 54, 0.06), 0 1px 2px rgba(61, 58, 54, 0.04);
+  --shadow-float-hover: 0 16px 40px rgba(196, 160, 160, 0.18), 0 4px 12px rgba(61, 58, 54, 0.06);
+  --shadow-card-inset: inset 0 1px 0 rgba(255, 255, 255, 0.85);
   --shadow-glow-rose: 0 0 24px rgba(196, 160, 160, 0.35);
   --motion-duration-fast: 200ms;
   --motion-duration-normal: 300ms;
@@ -51,6 +53,12 @@
   --shadow-float: var(--shadow-float);
   --shadow-float-hover: var(--shadow-float-hover);
   --shadow-glow-rose: var(--shadow-glow-rose);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --header-offset: 5.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -143,7 +151,11 @@ textarea::placeholder {
 
 @layer components {
   .page-container {
-    @apply mx-auto max-w-6xl px-4 sm:px-6;
+    @apply mx-auto max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-spacing {
+    @apply py-12 sm:py-16 lg:py-20;
   }
 
   .page-container-narrow {
@@ -155,11 +167,23 @@ textarea::placeholder {
   }
 
   .heading-display {
-    @apply text-4xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem];
+    @apply text-[1.625rem] font-extrabold leading-[1.18] tracking-tight text-foreground break-words sm:text-4xl sm:leading-[1.12] lg:text-[3.25rem];
   }
 
   .heading-section {
-    @apply text-3xl font-bold text-foreground;
+    @apply text-2xl font-bold text-foreground sm:text-3xl;
+  }
+
+  .heading-page {
+    @apply text-2xl font-bold leading-tight text-foreground sm:text-4xl;
+  }
+
+  .heading-catalog {
+    @apply text-xl font-bold leading-tight text-foreground sm:text-3xl md:text-4xl;
+  }
+
+  .touch-target {
+    @apply inline-flex min-h-11 items-center;
   }
 
   .text-muted {
@@ -170,9 +194,53 @@ textarea::placeholder {
     @apply text-rose-dusty-dark transition-colors duration-300 hover:text-rose-dusty;
   }
 
-  /* Карточка товара — «парящий» гелиевый эффект на desktop hover */
+  /* Карточка товара — лёгкий градиент и «парение» */
   .premium-card {
-    @apply rounded-3xl border border-neutral-border bg-neutral-surface shadow-float transition-[transform,box-shadow] duration-300 ease-out;
+    @apply rounded-[1.25rem] border border-neutral-border/60 bg-gradient-to-b from-neutral-surface to-neutral-muted/25 shadow-float transition-[transform,box-shadow] duration-300 ease-out sm:rounded-3xl;
+    box-shadow: var(--shadow-float), var(--shadow-card-inset);
+  }
+
+  .catalog-filter-bar {
+    position: sticky;
+    top: var(--header-offset);
+    z-index: 30;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--neutral-border) 80%, transparent);
+    background: color-mix(in srgb, var(--cream) 94%, transparent);
+    padding: 0.75rem 1rem 1rem;
+    backdrop-filter: blur(14px);
+  }
+
+  @media (min-width: 640px) {
+    .catalog-filter-bar {
+      margin-left: -1.5rem;
+      margin-right: -1.5rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  .select-premium {
+    @apply h-12 w-full cursor-pointer appearance-none rounded-2xl border border-neutral-border/80 bg-neutral-surface pl-4 pr-11 text-base font-semibold text-foreground shadow-sm outline-none transition-[border-color,box-shadow] duration-300;
+    box-shadow: var(--shadow-float), var(--shadow-card-inset);
+  }
+
+  .select-premium:focus {
+    border-color: var(--rose-dusty-light);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--rose-dusty-light) 50%, transparent);
+  }
+
+  @media (min-width: 768px) {
+    .category-filter-desktop {
+      position: sticky;
+      top: var(--header-offset);
+      z-index: 30;
+      padding-bottom: 0.75rem;
+      background: color-mix(in srgb, var(--cream) 92%, transparent);
+      backdrop-filter: blur(12px);
+    }
   }
 
   @media (hover: hover) {

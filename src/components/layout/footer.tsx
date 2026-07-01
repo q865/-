@@ -12,27 +12,32 @@ export function Footer({
   settings: SiteSettings;
   categories?: FooterCategory[];
 }) {
+  const linkClass = "touch-target py-1 text-sm text-muted transition hover:text-rose-dusty-dark";
+
   return (
     <footer className="mt-auto border-t border-neutral-border bg-neutral-surface">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="page-container grid gap-8 py-12 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <h3 className="text-lg font-bold text-[#3d3a36]">{settings.siteName}</h3>
-          <p className="mt-3 text-sm leading-6 text-[#6b6560]">
+          <h3 className="text-lg font-bold text-foreground">{settings.siteName}</h3>
+          <p className="mt-3 text-sm leading-6 text-muted">
             Композиции из гелевых шаров и оформление праздников в Москве.
             Заказ по согласованию — напишите нам удобным способом.
           </p>
         </div>
 
         <div>
-          <h4 className="font-semibold text-[#3d3a36]">Навигация</h4>
-          <div className="mt-3 flex flex-col gap-2 text-sm text-[#6b6560]">
-            <Link href="/catalog" className="transition hover:text-rose-dusty-dark">
+          <h4 className="font-semibold text-foreground">Навигация</h4>
+          <div className="mt-3 flex flex-col gap-1">
+            <Link href="/catalog" className={linkClass}>
               Каталог
             </Link>
-            <Link href="/how-to-order" className="transition hover:text-rose-dusty-dark">
+            <Link href="/services" className={linkClass}>
+              Услуги для бизнеса
+            </Link>
+            <Link href="/how-to-order" className={linkClass}>
               Как заказать
             </Link>
-            <Link href="/contacts" className="transition hover:text-rose-dusty-dark">
+            <Link href="/contacts" className={linkClass}>
               Контакты
             </Link>
           </div>
@@ -40,13 +45,13 @@ export function Footer({
 
         {categories.length > 0 ? (
           <div>
-            <h4 className="font-semibold text-[#3d3a36]">Коллекции</h4>
-            <div className="mt-3 flex flex-col gap-2 text-sm text-[#6b6560]">
+            <h4 className="font-semibold text-foreground">Коллекции</h4>
+            <div className="mt-3 flex flex-col gap-1">
               {categories.map((category) => (
                 <Link
                   key={category.slug}
                   href={`/catalog?category=${category.slug}`}
-                  className="transition hover:text-rose-dusty-dark"
+                  className={linkClass}
                 >
                   {category.name}
                 </Link>
@@ -56,10 +61,10 @@ export function Footer({
         ) : null}
 
         <div>
-          <h4 className="font-semibold text-[#3d3a36]">Связаться</h4>
+          <h4 className="font-semibold text-foreground">Связаться</h4>
           <a
             href={`tel:${settings.phone.replace(/\D/g, "")}`}
-            className="mt-3 block text-sm font-medium text-[#3d3a36] hover:text-rose-dusty-dark"
+            className="touch-target mt-3 block py-1 text-sm font-medium text-foreground hover:text-rose-dusty-dark"
           >
             {formatPhone(settings.phone)}
           </a>
@@ -67,7 +72,7 @@ export function Footer({
         </div>
       </div>
 
-      <div className="border-t border-neutral-border px-4 py-4 text-center text-xs text-neutral-text">
+      <div className="page-container border-t border-neutral-border py-4 text-center text-xs text-neutral-text">
         © {new Date().getFullYear()} {settings.siteName}. Москва.
       </div>
     </footer>

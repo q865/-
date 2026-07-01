@@ -1,7 +1,7 @@
 import type { Product, Category, SiteSettings } from "@/generated/prisma/client";
 import { SITE_URL } from "@/lib/site-config";
 import { faqItems } from "@/lib/home-content";
-import { getProductGallery } from "@/lib/utils";
+import { getProductGallery, getProductCoverImage } from "@/lib/utils";
 
 type ProductWithCategory = Product & { category: Category };
 
@@ -74,7 +74,10 @@ export function buildProductListJsonLd(products: ProductWithCategory[]) {
         "@type": "Product",
         name: product.name,
         description: product.description ?? undefined,
-        image: `${SITE_URL}/placeholder-product.svg`,
+        image: getProductCoverImage(product.images, {
+          slug: product.slug,
+          categorySlug: product.category.slug,
+        }),
         offers: {
           "@type": "Offer",
           price: product.price,
@@ -101,7 +104,10 @@ export function buildBreadcrumbJsonLd(items: Array<{ name: string; path: string 
 }
 
 export function buildProductJsonLd(product: ProductWithCategory) {
-  const images = getProductGallery(product.images).map((image) =>
+  const images = getProductGallery(product.images, {
+    slug: product.slug,
+    categorySlug: product.category.slug,
+  }).map((image) =>
     image.startsWith("/") ? `${SITE_URL}${image}` : image,
   );
 
