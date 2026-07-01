@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Logo } from "@/components/brand/logo";
 import { SITE_BRAND_NAME } from "@/lib/site-config";
 
 export default function AdminLoginPage() {
@@ -40,7 +41,10 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center page-glow px-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
+        <CardHeader className="items-center text-center">
+          <div className="mx-auto mb-2 h-16 w-16 overflow-hidden rounded-2xl shadow-sm ring-1 ring-neutral-border/60">
+            <Logo className="h-16 w-16" />
+          </div>
           <CardTitle>Вход в админку</CardTitle>
           <p className="text-sm text-[#9c9590]">{SITE_BRAND_NAME}</p>
         </CardHeader>

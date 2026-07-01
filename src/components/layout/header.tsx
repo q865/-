@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { LayoutGrid, Phone, Send } from "lucide-react";
+import { Phone, Send } from "lucide-react";
 import type { SiteSettings } from "@/generated/prisma/client";
+import { Logo } from "@/components/brand/logo";
 import { VkIcon } from "@/components/icons/vk-icon";
 import { Button } from "@/components/ui/button";
 import { buildTelUrl } from "@/lib/contact-links";
@@ -90,8 +91,8 @@ export function Header({ settings }: { settings: SiteSettings }) {
 
       <div className="page-container flex items-center justify-between gap-3 py-3 sm:py-3.5">
         <Link href="/" className="group flex min-w-0 items-center gap-2.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-gold-muted to-gold-muted-dark text-white shadow-sm">
-            <LayoutGrid className="h-5 w-5" aria-hidden />
+          <div className="h-10 w-10 shrink-0 overflow-hidden rounded-2xl shadow-sm ring-1 ring-neutral-border/60 transition group-hover:shadow-md">
+            <Logo className="h-10 w-10" />
           </div>
           <div className="min-w-0">
             <div className="truncate text-base font-bold text-foreground sm:text-lg">

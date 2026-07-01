@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { SiteSettings } from "@/generated/prisma/client";
+import { Logo } from "@/components/brand/logo";
 import { formatPhone } from "@/lib/utils";
 import { SocialLinks } from "@/components/layout/header";
 
@@ -18,7 +19,12 @@ export function Footer({
     <footer className="mt-auto border-t border-neutral-border bg-neutral-surface">
       <div className="page-container grid gap-8 py-12 md:grid-cols-2 lg:grid-cols-4">
         <div>
-          <h3 className="text-lg font-bold text-foreground">{settings.siteName}</h3>
+          <div className="flex items-center gap-2.5">
+            <div className="h-9 w-9 shrink-0 overflow-hidden rounded-xl ring-1 ring-neutral-border/60">
+              <Logo className="h-9 w-9" />
+            </div>
+            <h3 className="text-lg font-bold text-foreground">{settings.siteName}</h3>
+          </div>
           <p className="mt-3 text-sm leading-6 text-muted">
             Композиции из гелевых шаров и оформление праздников в Москве.
             Заказ по согласованию — напишите нам удобным способом.

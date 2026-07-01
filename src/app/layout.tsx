@@ -45,6 +45,11 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: settings.seoTitle,
       description: settings.seoDescription,
+      images: ["/logo.svg"],
+    },
+    icons: {
+      icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+      apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
     },
   };
 }
