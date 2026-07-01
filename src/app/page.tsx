@@ -85,6 +85,7 @@ export default async function HomePage() {
 
       <section aria-labelledby="hero-heading" className="page-container pt-4 sm:pt-6">
         <HeroBanner
+          imageUrl={settings.heroImageUrl}
           product={heroProduct}
           title={settings.heroTitle}
           subtitle={settings.heroSubtitle}

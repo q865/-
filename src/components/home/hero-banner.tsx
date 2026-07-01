@@ -3,46 +3,42 @@ import { ArrowRight } from "lucide-react";
 import { ProductImage } from "@/components/product-image";
 import { FadeIn } from "@/components/motion/fade-in-section";
 import { Button } from "@/components/ui/button";
-import { getProductCoverImage } from "@/lib/utils";
 
 type HeroProduct = {
   slug: string;
   name: string;
-  images: string;
-  category: { slug: string; name: string };
 };
 
 export function HeroBanner({
+  imageUrl,
   product,
   title,
   subtitle,
   siteName,
 }: {
+  imageUrl?: string | null;
   product?: HeroProduct;
   title: string;
   subtitle: string;
   siteName: string;
 }) {
-  const imageSrc = product
-    ? getProductCoverImage(product.images, {
-        slug: product.slug,
-        categorySlug: product.category.slug,
-      })
-    : null;
+  const imageSrc = imageUrl?.trim() || null;
 
   return (
     <FadeIn delayMs={40}>
       <div className="relative overflow-hidden rounded-3xl bg-neutral-muted shadow-float">
-        <div className="relative aspect-[4/5] max-h-[min(460px,72vh)] sm:aspect-[21/9] sm:max-h-none lg:aspect-[2.4/1]">
+        <div className="relative aspect-[3/4] max-h-[min(520px,72vh)] w-full sm:aspect-[21/9] sm:max-h-[min(440px,50vh)] lg:aspect-[2.4/1] lg:max-h-none">
           {imageSrc ? (
-            <ProductImage
-              src={imageSrc}
-              alt={product ? `${product.name} — гелевые шары` : `Гелевые шары ${siteName}`}
-              fill
-              priority
-              className="object-cover object-center"
-              sizes="100vw"
-            />
+            <div className="absolute inset-0">
+              <ProductImage
+                src={imageSrc}
+                alt={`Гелевые шары ${siteName}`}
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-[center_25%] sm:object-[center_35%] lg:object-center"
+              />
+            </div>
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-gold-muted-light via-lavender-soft to-blue-soft-light" />
           )}

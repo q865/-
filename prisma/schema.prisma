@@ -51,6 +51,7 @@ model SiteSettings {
   phone        String @default("+79652955956")
   heroTitle    String @default("Создаём волшебство!")
   heroSubtitle String @default("Оформление праздников в Москве — гендер-пати, выписка, дни рождения")
+  heroImageUrl String @default("/brand/hero.jpg")
   seoTitle     String @default("Гелевые шары с доставкой в Москве — Воздушное облако")
   seoDescription String @default("Воздушное облако — композиции из гелевых шаров на заказ в Москве. Telegram, VK, телефон.")
 }

@@ -5,15 +5,43 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ProductImage } from "@/components/product-image";
 import type { SiteSettings } from "@/generated/prisma/client";
 
 export function SettingsForm({ settings }: { settings: SiteSettings }) {
-  const [form, setForm] = useState(settings);
+  const [form, setForm] = useState({
+    ...settings,
+    heroImageUrl: settings.heroImageUrl ?? "",
+  });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [uploading, setUploading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  async function uploadHeroImage(file: File) {
+    setUploading(true);
+    setErrorMessage("");
+    const body = new FormData();
+    body.append("file", file);
+    body.append("folder", "hero");
+
+    try {
+      const response = await fetch("/api/upload", { method: "POST", body });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(typeof data.error === "string" ? data.error : "Не удалось загрузить фото");
+      }
+      setForm((prev) => ({ ...prev, heroImageUrl: data.url }));
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : "Не удалось загрузить фото");
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setStatus("loading");
+    setErrorMessage("");
 
     const { id: _id, ...payload } = form;
 
@@ -23,7 +51,13 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
       body: JSON.stringify(payload),
     });
 
-    setStatus(response.ok ? "success" : "error");
+    const data = await response.json().catch(() => ({}));
+    if (response.ok) {
+      setStatus("success");
+    } else {
+      setStatus("error");
+      setErrorMessage(typeof data.error === "string" ? data.error : "Ошибка сохранения");
+    }
   }
 
   return (
@@ -39,6 +73,49 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
           onChange={(e) => setForm({ ...form, siteName: e.target.value })}
         />
       </div>
+
+      <div className="space-y-3">
+        <Label htmlFor="hero-image">Фото на главной (hero)</Label>
+        <p className="text-xs text-[#9c9590]">
+          Вертикальное фото 3:4 лучше всего смотрится на телефоне. После загрузки нажмите «Сохранить».
+        </p>
+        {form.heroImageUrl ? (
+          <div className="relative mx-auto aspect-[3/4] max-h-64 w-full max-w-xs overflow-hidden rounded-2xl border border-rose-dusty-light/50 bg-rose-dusty-light/20">
+            <ProductImage
+              src={form.heroImageUrl}
+              alt="Фото на главной"
+              fill
+              sizes="256px"
+              className="object-cover object-center"
+            />
+          </div>
+        ) : (
+          <p className="text-sm text-[#9c9590]">Фото не выбрано — будет градиент</p>
+        )}
+        <Input
+          id="hero-image"
+          type="file"
+          accept="image/*"
+          disabled={uploading}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) uploadHeroImage(file);
+            e.target.value = "";
+          }}
+        />
+        {uploading ? <p className="text-sm text-[#9c9590]">Загрузка...</p> : null}
+        {form.heroImageUrl ? (
+          <Button
+            type="button"
+            variant="outline"
+            disabled={uploading || status === "loading"}
+            onClick={() => setForm({ ...form, heroImageUrl: "" })}
+          >
+            Убрать фото
+          </Button>
+        ) : null}
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="heroTitle">Заголовок на главной</Label>
         <Input
@@ -118,10 +195,10 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
       {status === "success" ? (
         <p className="text-sm text-emerald-600">Настройки сохранены</p>
       ) : null}
-      {status === "error" ? (
-        <p className="text-sm text-red-600">Ошибка сохранения</p>
+      {status === "error" || errorMessage ? (
+        <p className="text-sm text-red-600">{errorMessage || "Ошибка сохранения"}</p>
       ) : null}
-      <Button type="submit" disabled={status === "loading"}>
+      <Button type="submit" disabled={status === "loading" || uploading}>
         {status === "loading" ? "Сохранение..." : "Сохранить"}
       </Button>
     </form>

@@ -11,6 +11,7 @@ export const DEFAULT_SITE_SETTINGS: Omit<SiteSettings, "id"> = {
   heroTitle: "Создаём волшебство!",
   heroSubtitle:
     "Композиции на заказ: гендер-пати, выписка из роддома, дни рождения и свадьбы. Согласуем дату, цвета и доставку — напишите в Telegram или VK.",
+  heroImageUrl: "/brand/hero.jpg",
   seoTitle:
     "Гелевые шары с доставкой в Москве — Воздушное облако | Композиции на праздник",
   seoDescription:

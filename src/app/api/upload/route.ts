@@ -12,6 +12,8 @@ export async function POST(request: Request) {
   try {
     const formData = await request.formData();
     const file = formData.get("file");
+    const folderRaw = formData.get("folder");
+    const folder = folderRaw === "hero" ? "hero" : "products";
 
     if (!(file instanceof File)) {
       return jsonError("Файл не передан", 400);
@@ -22,7 +24,7 @@ export async function POST(request: Request) {
     const filename = buildUploadFilename(ext);
 
     if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(`products/${filename}`, buffer, {
+      const blob = await put(`${folder}/${filename}`, buffer, {
         access: "public",
         contentType: file.type,
       });

@@ -39,6 +39,7 @@ export const settingsSchema = z.object({
   phone: z.string().trim().min(6).max(30).optional(),
   heroTitle: z.string().trim().min(1).max(200).optional(),
   heroSubtitle: z.string().trim().max(500).optional(),
+  heroImageUrl: z.string().trim().max(500).optional(),
   seoTitle: z.string().trim().min(1).max(200).optional(),
   seoDescription: z.string().trim().max(500).optional(),
 });
