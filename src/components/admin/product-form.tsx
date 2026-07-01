@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ProductImage } from "@/components/product-image";
-import { slugify, isPlaceholderImage } from "@/lib/utils";
+import { slugify, isPlaceholderImage, parsePositiveInt } from "@/lib/utils";
 
 type Category = { id: string; name: string };
 
@@ -31,6 +31,7 @@ export function ProductForm({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [slugTouched, setSlugTouched] = useState(Boolean(product?.slug));
@@ -95,9 +96,16 @@ export function ProductForm({
       return;
     }
 
+    const price = parsePositiveInt(form.price);
+    if (price === null) {
+      setError("Укажите цену целым числом в рублях (например, 4500)");
+      setLoading(false);
+      return;
+    }
+
     const payload = {
       ...form,
-      price: Number(form.price),
+      price,
       images,
     };
 
@@ -111,12 +119,40 @@ export function ProductForm({
         },
       );
 
-      if (!response.ok) throw new Error("save failed");
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(
+          typeof data.error === "string"
+            ? data.error
+            : "Не удалось сохранить товар. Проверьте, что вы нажали «Сохранить» после загрузки фото.",
+        );
+      }
       router.push("/admin/products");
       router.refresh();
-    } catch {
-      setError("Не удалось сохранить товар. Проверьте, что вы нажали «Сохранить» после загрузки фото.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Не удалось сохранить товар");
       setLoading(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!product) return;
+    if (!confirm(`Удалить «${product.name}»? Это действие нельзя отменить.`)) return;
+
+    setDeleting(true);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/products/${product.id}`, { method: "DELETE" });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(typeof data.error === "string" ? data.error : "Не удалось удалить товар");
+      }
+      router.push("/admin/products");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Не удалось удалить товар");
+      setDeleting(false);
     }
   }
 
@@ -182,7 +218,8 @@ export function ProductForm({
           id="price"
           type="number"
           min="0"
-          step="100"
+          step="1"
+          inputMode="numeric"
           required
           value={form.price}
           onChange={(e) => setForm({ ...form, price: e.target.value })}
@@ -268,16 +305,28 @@ export function ProductForm({
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
       <div className="flex flex-wrap gap-3">
-        <Button type="submit" disabled={loading || uploading}>
+        <Button type="submit" disabled={loading || uploading || deleting}>
           {loading ? "Сохранение..." : "Сохранить"}
         </Button>
         <Button
           type="button"
           variant="outline"
+          disabled={loading || uploading || deleting}
           onClick={() => router.push("/admin/products")}
         >
           Отмена
         </Button>
+        {product ? (
+          <Button
+            type="button"
+            variant="outline"
+            disabled={loading || uploading || deleting}
+            onClick={handleDelete}
+            className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700"
+          >
+            {deleting ? "Удаление..." : "Удалить товар"}
+          </Button>
+        ) : null}
       </div>
     </form>
   );

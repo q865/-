@@ -27,6 +27,14 @@ export function slugify(text: string): string {
     .slice(0, 80);
 }
 
+export function parsePositiveInt(value: string): number | null {
+  const normalized = value.trim().replace(/\s/g, "").replace(",", ".");
+  if (!normalized) return null;
+  const n = Number(normalized);
+  if (!Number.isFinite(n) || !Number.isInteger(n) || n < 0) return null;
+  return n;
+}
+
 export function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU", {
     style: "currency",

@@ -57,3 +57,4 @@ dev.db
 .env.local
 .env.*.local
 .env.vercel.prod
+.env*

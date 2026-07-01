@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, parseImages } from "@/lib/utils";
+import { ProductRowActions } from "@/components/admin/product-row-actions";
 
 export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({
@@ -70,12 +71,7 @@ export default async function AdminProductsPage() {
                     ) : null}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Link
-                      href={`/admin/products/${product.id}`}
-                      className="font-medium text-rose-dusty-dark hover:text-rose-dusty"
-                    >
-                      Редактировать
-                    </Link>
+                    <ProductRowActions id={product.id} name={product.name} />
                   </td>
                 </tr>
               ))}
