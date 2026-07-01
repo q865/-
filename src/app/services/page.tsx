@@ -22,6 +22,8 @@ export const metadata: Metadata = buildPageMetadata({
 
 const serviceIcons = [Store, Building2, Users, Building2] as const;
 
+export const dynamic = "force-dynamic";
+
 export default async function ServicesPage() {
   const settings = await getSettings();
 

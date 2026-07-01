@@ -3,16 +3,23 @@ import { prisma } from "@/lib/prisma";
 import { SITE_URL } from "@/lib/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, categories] = await Promise.all([
-    prisma.product.findMany({
-      where: { published: true },
-      select: { slug: true, updatedAt: true },
-    }),
-    prisma.category.findMany({
-      select: { slug: true, updatedAt: true },
-      orderBy: { sortOrder: "asc" },
-    }),
-  ]);
+  let products: { slug: string; updatedAt: Date }[] = [];
+  let categories: { slug: string; updatedAt: Date }[] = [];
+
+  try {
+    [products, categories] = await Promise.all([
+      prisma.product.findMany({
+        where: { published: true },
+        select: { slug: true, updatedAt: true },
+      }),
+      prisma.category.findMany({
+        select: { slug: true, updatedAt: true },
+        orderBy: { sortOrder: "asc" },
+      }),
+    ]);
+  } catch {
+    // БД недоступна при сборке без Postgres
+  }
 
   const staticPages: MetadataRoute.Sitemap = [
     {

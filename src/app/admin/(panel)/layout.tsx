@@ -2,6 +2,8 @@ import Link from "next/link";
 import { signOut } from "@/auth";
 import { getSettings } from "@/lib/queries/settings";
 
+export const dynamic = "force-dynamic";
+
 const links = [
   { href: "/admin", label: "Обзор" },
   { href: "/admin/products", label: "Товары" },

@@ -65,7 +65,12 @@ export default async function HomePage() {
 
   const featured = products.filter((product) => product.featured);
   const showcaseProducts = featured.length > 0 ? featured.slice(0, 8) : products.slice(0, 8);
-  const heroProduct = featured[0] ?? products[0];
+  const heroProduct =
+    featured.find((p) => p.slug === "nabor-gender-pati") ??
+    featured.find((p) => p.category.slug === "gender-pati") ??
+    featured.find((p) => p.slug === "fontan-iz-sharov") ??
+    featured[0] ??
+    products[0];
 
   const structuredData = [
     buildLocalBusinessJsonLd(settings),

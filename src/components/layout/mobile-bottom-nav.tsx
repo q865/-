@@ -20,7 +20,7 @@ export function MobileBottomNav() {
   return (
     <nav
       aria-label="Основная навигация"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-neutral-border bg-neutral-surface/95 backdrop-blur-lg md:hidden"
+      className="fixed inset-x-0 bottom-0 z-[100] border-t border-neutral-border bg-neutral-surface/95 backdrop-blur-lg md:hidden"
     >
       <div className="grid grid-cols-4 pb-[env(safe-area-inset-bottom,0px)]">
         {items.map(({ href, label, icon: Icon }) => {

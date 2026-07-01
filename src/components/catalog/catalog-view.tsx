@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search } from "lucide-react";
 import type { Product, Category } from "@/generated/prisma/client";
 import { ProductCard } from "@/components/product-card";
 import { productGridClassName } from "@/components/ui/product-grid";
@@ -47,14 +47,14 @@ export function CatalogView({
 
   const chipClass = (active: boolean) =>
     cn(
-      "category-scroll-item inline-flex min-h-10 items-center justify-center rounded-2xl border px-4 py-2 text-sm font-medium transition",
+      "category-scroll-item inline-flex min-h-10 shrink-0 items-center justify-center rounded-2xl border px-3.5 py-2 text-sm font-medium transition sm:px-4",
       active ? "chip-active" : "chip-idle",
     );
 
   return (
     <>
       <div className="catalog-filter-bar">
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <div className="relative min-w-0 flex-1">
             <Search
               className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-text"
@@ -64,27 +64,21 @@ export function CatalogView({
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Поиск композиций..."
-              className="h-11 w-full rounded-2xl border border-neutral-border bg-neutral-surface pl-10 pr-4 text-base outline-none transition focus:border-gold-muted-light focus:ring-2 focus:ring-gold-muted-light/40"
+              placeholder="Поиск..."
+              className="h-11 w-full rounded-2xl border border-neutral-border bg-neutral-surface pl-10 pr-3 text-base outline-none transition focus:border-gold-muted-light focus:ring-2 focus:ring-gold-muted-light/40"
               aria-label="Поиск по каталогу"
             />
           </div>
-          <div className="relative shrink-0">
-            <SlidersHorizontal
-              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-text md:hidden"
-              aria-hidden
-            />
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortKey)}
-              className="h-11 min-w-[7.5rem] cursor-pointer appearance-none rounded-2xl border border-neutral-border bg-neutral-surface pl-3 pr-8 text-sm font-medium outline-none md:pl-4 md:pr-10"
-              aria-label="Сортировка"
-            >
-              <option value="new">Новые</option>
-              <option value="price-asc">Дешевле</option>
-              <option value="price-desc">Дороже</option>
-            </select>
-          </div>
+          <select
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            className="h-11 w-full cursor-pointer appearance-none rounded-2xl border border-neutral-border bg-neutral-surface px-4 text-sm font-medium outline-none sm:w-auto sm:min-w-[9.5rem]"
+            aria-label="Сортировка"
+          >
+            <option value="new">Сначала новые</option>
+            <option value="price-asc">Сначала дешевле</option>
+            <option value="price-desc">Сначала дороже</option>
+          </select>
         </div>
 
         <nav aria-label="Категории" className="category-scroll mt-3 md:hidden">

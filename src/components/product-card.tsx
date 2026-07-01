@@ -29,22 +29,22 @@ export function ProductCard({ product }: { product: ProductWithCategory }) {
         ) : null}
       </Link>
 
-      <div className="flex flex-1 flex-col gap-2 p-3 sm:p-3.5">
+      <div className="flex flex-1 flex-col gap-2 p-2.5 sm:p-3.5">
         <Link href={`/product/${product.slug}`} className="min-w-0 flex-1">
-          <p className="truncate text-[10px] font-semibold uppercase tracking-wider text-gold-muted-dark/80">
+          <p className="line-clamp-1 text-[9px] font-semibold uppercase tracking-wide text-gold-muted-dark/80 sm:text-[10px]">
             {product.category.name}
           </p>
-          <h3 className="mt-0.5 line-clamp-2 text-sm font-semibold leading-snug text-foreground">
+          <h3 className="mt-0.5 line-clamp-3 min-h-[2.75rem] text-xs font-semibold leading-snug text-foreground sm:line-clamp-2 sm:min-h-0 sm:text-sm">
             {product.name}
           </h3>
-          <p className="mt-1.5 text-base font-bold tabular-nums text-foreground">
+          <p className="mt-1 text-sm font-bold tabular-nums text-foreground sm:mt-1.5 sm:text-base">
             от {formatPrice(product.price)}
           </p>
         </Link>
 
         <Link
           href={`/product/${product.slug}`}
-          className="flex min-h-10 w-full items-center justify-center rounded-xl bg-gold-muted text-xs font-semibold uppercase tracking-wide text-white shadow-sm transition-colors duration-300 [@media(hover:hover)]:group-hover:bg-gold-muted-dark"
+          className="flex min-h-9 w-full items-center justify-center rounded-xl bg-gold-muted text-[11px] font-semibold uppercase tracking-wide text-white shadow-sm transition-colors duration-300 sm:min-h-10 sm:text-xs [@media(hover:hover)]:group-hover:bg-gold-muted-dark"
         >
           Заказать
         </Link>
