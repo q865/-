@@ -30,7 +30,7 @@ export function Breadcrumbs({ items }: { items: BreadcrumbItem[] }) {
                   {item.name}
                 </span>
               ) : (
-                <Link href={item.href} className="touch-target py-1 transition hover:text-rose-dusty-dark">
+                <Link href={item.href} className="touch-target py-1 transition hover:text-gold-muted-dark">
                   {item.name}
                 </Link>
               )}

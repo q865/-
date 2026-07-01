@@ -5,13 +5,13 @@ import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { ContactForm } from "@/components/contact-form";
 import { OrderButtons } from "@/components/order-buttons";
 import { buildPageMetadata } from "@/lib/page-metadata";
+import { SITE_BRAND_NAME } from "@/lib/site-config";
 import { getSettings, buildTelUrl } from "@/lib/settings";
 import { formatPhone } from "@/lib/utils";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Контакты — заказать гелевые шары",
-  description:
-    "Свяжитесь с Air Cloud MSK: Telegram, VK, телефон. Москва, доставка шаров с гелием по согласованию. Форма заявки на сайте.",
+  description: `Свяжитесь с «${SITE_BRAND_NAME}»: Telegram, VK, телефон. Москва, доставка шаров с гелием по согласованию. Форма заявки на сайте.`,
   path: "/contacts",
 });
 
@@ -50,7 +50,7 @@ export default async function ContactsPage() {
                 key={item.label}
                 className="premium-card flex items-start gap-3 p-4 sm:p-5"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-rose-dusty-light/50 text-rose-dusty-dark">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-gold-muted-light/50 text-gold-muted-dark">
                   <Icon className="h-5 w-5" aria-hidden />
                 </span>
                 <div>
@@ -71,7 +71,7 @@ export default async function ContactsPage() {
               </p>
               <a
                 href={buildTelUrl(settings.phone)}
-                className="touch-target mt-5 block text-2xl font-bold text-foreground hover:text-rose-dusty-dark sm:text-3xl"
+                className="touch-target mt-5 block text-2xl font-bold text-foreground hover:text-gold-muted-dark sm:text-3xl"
               >
                 {formatPhone(settings.phone)}
               </a>

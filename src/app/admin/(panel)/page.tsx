@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { getSettings } from "@/lib/queries/settings";
 
 export default async function AdminDashboardPage() {
+  const settings = await getSettings();
   const [productsCount, categoriesCount, ordersCount, recentOrders] =
     await Promise.all([
       prisma.product.count(),
@@ -23,7 +25,7 @@ export default async function AdminDashboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-[#3d3a36]">Обзор</h1>
-        <p className="mt-2 text-[#9c9590]">Управление каталогом Air Cloud MSK</p>
+        <p className="mt-2 text-[#9c9590]">Управление каталогом {settings.siteName}</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">

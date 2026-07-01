@@ -68,7 +68,7 @@ function MaxFallbackNote({ settings }: { settings: SiteSettings }) {
   return (
     <p className="text-center text-xs leading-5 text-muted sm:text-left">
       MAX: найдите нас по номеру{" "}
-      <a href={buildTelUrl(settings.phone)} className="font-medium text-foreground hover:text-rose-dusty-dark">
+      <a href={buildTelUrl(settings.phone)} className="font-medium text-foreground hover:text-gold-muted-dark">
         {formatPhone(settings.phone)}
       </a>
     </p>

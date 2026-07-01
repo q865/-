@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <SiteShell>
       <div className="mx-auto flex max-w-lg flex-col items-center px-4 py-24 text-center sm:px-6">
-        <p className="text-6xl font-extrabold text-rose-dusty-light">404</p>
+        <p className="text-6xl font-extrabold text-gold-muted-light">404</p>
         <h1 className="heading-page mt-4">Страница не найдена</h1>
         <p className="mt-3 text-muted">
           Возможно, ссылка устарела или композиция уже снята с витрины.

@@ -12,7 +12,7 @@ export function Footer({
   settings: SiteSettings;
   categories?: FooterCategory[];
 }) {
-  const linkClass = "touch-target py-1 text-sm text-muted transition hover:text-rose-dusty-dark";
+  const linkClass = "touch-target py-1 text-sm text-muted transition hover:text-gold-muted-dark";
 
   return (
     <footer className="mt-auto border-t border-neutral-border bg-neutral-surface">
@@ -64,7 +64,7 @@ export function Footer({
           <h4 className="font-semibold text-foreground">Связаться</h4>
           <a
             href={`tel:${settings.phone.replace(/\D/g, "")}`}
-            className="touch-target mt-3 block py-1 text-sm font-medium text-foreground hover:text-rose-dusty-dark"
+            className="touch-target mt-3 block py-1 text-sm font-medium text-foreground hover:text-gold-muted-dark"
           >
             {formatPhone(settings.phone)}
           </a>

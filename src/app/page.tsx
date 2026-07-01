@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  ArrowRight,
   CheckCircle2,
   MessageCircle,
   Phone,
-  Sparkles,
   Truck,
 } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
 import { JsonLd } from "@/components/home/json-ld";
-import { FadeIn } from "@/components/motion/fade-in-section";
 import { StaggerGrid } from "@/components/motion/stagger-grid";
 import { OrderButtons } from "@/components/order-buttons";
 import { ProductCard } from "@/components/product-card";
-import { HeroShowcase } from "@/components/home/hero-showcase";
+import { HeroBanner } from "@/components/home/hero-banner";
+import { CategoryIconGrid } from "@/components/home/category-icon-grid";
 import { ProductImage } from "@/components/product-image";
 import { Button } from "@/components/ui/button";
 import { productGridClassName } from "@/components/ui/product-grid";
@@ -36,7 +34,7 @@ import {
   buildProductListJsonLd,
   buildWebSiteJsonLd,
 } from "@/lib/seo";
-import { buildTelegramOrderUrl, buildTelUrl } from "@/lib/contact-links";
+import { buildTelUrl } from "@/lib/contact-links";
 import { SITE_KEYWORDS, SITE_URL } from "@/lib/site-config";
 import { cn, formatPhone } from "@/lib/utils";
 import { resolveStockImage } from "@/lib/stock-images";
@@ -67,8 +65,7 @@ export default async function HomePage() {
 
   const featured = products.filter((product) => product.featured);
   const showcaseProducts = featured.length > 0 ? featured.slice(0, 8) : products.slice(0, 8);
-  const heroProducts =
-    featured.length > 0 ? featured.slice(0, 4) : products.slice(0, 4);
+  const heroProduct = featured[0] ?? products[0];
 
   const structuredData = [
     buildLocalBusinessJsonLd(settings),
@@ -81,103 +78,50 @@ export default async function HomePage() {
     <SiteShell>
       <JsonLd data={structuredData} />
 
-      <section aria-labelledby="hero-heading" className="relative overflow-x-hidden border-b border-neutral-border bg-neutral-surface">
-        <div className="floating-orb -left-16 top-8 h-48 w-48 bg-rose-dusty-light/60 animate-float-gentle" />
-        <div
-          className="floating-orb right-0 top-12 h-40 w-40 bg-lavender-soft/70 animate-float-gentle"
-          style={{ animationDelay: "2s" }}
+      <section aria-labelledby="hero-heading" className="page-container pt-4 sm:pt-6">
+        <HeroBanner
+          product={heroProduct}
+          title={settings.heroTitle}
+          subtitle={settings.heroSubtitle}
+          siteName={settings.siteName}
         />
-        <div
-          className="floating-orb bottom-4 left-1/3 h-32 w-32 bg-mint-soft/60 animate-float-gentle"
-          style={{ animationDelay: "4s" }}
-        />
-
-        <div className="page-container relative grid gap-6 py-8 sm:gap-8 sm:py-10 lg:grid-cols-2 lg:items-center lg:gap-12 lg:py-16">
-          <HeroShowcase products={heroProducts} />
-
-          <FadeIn className="order-2 space-y-4 lg:order-1 lg:space-y-5">
-            <div className="inline-flex max-w-full items-center gap-2 rounded-full border border-rose-dusty-light/50 bg-rose-dusty-light/40 px-3 py-2 text-xs font-medium text-rose-dusty-dark shadow-sm sm:px-4 sm:text-sm">
-              <Sparkles className="h-4 w-4 shrink-0" aria-hidden />
-              <span className="leading-snug">Гелевые шары · доставка по Москве</span>
-            </div>
-            <h1 id="hero-heading" className="heading-display">
-              {settings.heroTitle}
-            </h1>
-            <p className="max-w-xl text-base leading-7 text-muted sm:text-lg sm:leading-8">
-              {settings.heroSubtitle}
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Button asChild size="lg" className="w-full sm:w-auto">
-                <Link href="/catalog">
-                  Смотреть каталог
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
-              </Button>
-              <Button asChild variant="secondary" size="lg" className="hidden w-full sm:inline-flex sm:w-auto">
-                <a
-                  href={buildTelegramOrderUrl(settings.telegramUrl)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Написать в Telegram
-                </a>
-              </Button>
-            </div>
-          </FadeIn>
-        </div>
       </section>
 
-      <section aria-label="Преимущества сервиса" className="border-b border-neutral-border bg-neutral-muted/50">
-        <div className="page-container grid gap-4 py-8 sm:grid-cols-2 lg:grid-cols-4">
+      <section aria-label="Преимущества сервиса" className="mt-6 border-b border-neutral-border bg-neutral-surface sm:mt-8">
+        <div className="page-container grid grid-cols-2 gap-3 py-6 sm:grid-cols-4 sm:gap-4 sm:py-8">
           {trustItems.map((item) => (
-            <div key={item.label} className="rounded-xl bg-neutral-surface px-4 py-4 shadow-sm">
-              <p className="font-semibold text-foreground">{item.label}</p>
-              <p className="mt-1 text-sm text-muted">{item.detail}</p>
+            <div
+              key={item.label}
+              className="rounded-2xl border border-neutral-border/60 bg-neutral-muted/40 px-3 py-3 sm:px-4 sm:py-4"
+            >
+              <p className="text-sm font-semibold text-foreground">{item.label}</p>
+              <p className="mt-1 text-xs text-muted sm:text-sm">{item.detail}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section aria-labelledby="categories-heading" className="page-container section-spacing">
-        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <section aria-labelledby="categories-heading" className="page-container py-8 sm:py-12">
+        <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <p className="section-kicker">Каталог</p>
+            <p className="section-kicker">Коллекции</p>
             <h2 id="categories-heading" className="heading-section mt-2">
-              Шары по коллекциям
+              Популярные категории
             </h2>
           </div>
-          <Link href="/catalog" className="link-accent touch-target py-1 text-sm font-medium">
-            Весь каталог →
+          <Link href="/catalog" className="link-accent shrink-0 text-sm font-medium">
+            Все →
           </Link>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/catalog?category=${category.slug}`}
-              className="group premium-card flex items-center gap-4 overflow-hidden p-3 sm:p-4"
-            >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-neutral-muted sm:h-20 sm:w-20">
-                <ProductImage
-                  src={resolveStockImage({ categorySlug: category.slug })}
-                  alt={category.name}
-                  fill
-                  sizes="80px"
-                  className="object-cover transition-transform duration-300 [@media(hover:hover)]:group-hover:scale-105"
-                />
-              </div>
-              <h3 className="text-base font-semibold text-foreground sm:text-lg">{category.name}</h3>
-            </Link>
-          ))}
-        </div>
+        <CategoryIconGrid categories={categories} />
       </section>
 
       {showcaseProducts.length > 0 ? (
         <section aria-labelledby="products-heading" className="border-y border-neutral-border bg-neutral-muted/60 section-spacing">
           <div className="page-container">
-            <p className="section-kicker">{featured.length > 0 ? "Популярное" : "Каталог"}</p>
+            <p className="section-kicker">{featured.length > 0 ? "Новинки" : "Каталог"}</p>
             <h2 id="products-heading" className="heading-section mt-2">
-              {featured.length > 0 ? "Товары к празднику" : "Композиции из гелевых шаров"}
+              {featured.length > 0 ? "Популярные композиции" : "Композиции из гелевых шаров"}
             </h2>
             <p className="mt-2 max-w-2xl text-muted">
               Готовые идеи с ориентировочной ценой — точную стоимость согласуем после обсуждения
@@ -207,7 +151,7 @@ export default async function HomePage() {
             <Link
               key={occasion.title}
               href={occasion.href}
-              className="rounded-2xl border border-neutral-border bg-neutral-surface p-6 shadow-sm transition hover:border-rose-dusty-light hover:shadow-md"
+              className="rounded-2xl border border-neutral-border bg-neutral-surface p-6 shadow-sm transition hover:border-gold-muted-light hover:shadow-md"
             >
               <h3 className="text-lg font-semibold text-foreground">{occasion.title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted">{occasion.text}</p>
@@ -272,7 +216,7 @@ export default async function HomePage() {
           <div className="mt-8 grid gap-5 sm:grid-cols-2">
             {advantages.map((item) => (
               <article key={item.title} className="flex gap-4 rounded-2xl border border-neutral-border bg-neutral-muted/40 p-6">
-                <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-rose-dusty-dark" aria-hidden />
+                <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-gold-muted-dark" aria-hidden />
                 <div>
                   <h3 className="font-semibold text-foreground">{item.title}</h3>
                   <p className="mt-2 text-sm leading-6 text-muted">{item.text}</p>
@@ -291,7 +235,7 @@ export default async function HomePage() {
         <div className="mt-8 grid gap-5 lg:grid-cols-3">
           {orderSteps.map((step) => (
             <article key={step.step} className="rounded-2xl border border-neutral-border bg-neutral-surface p-6 shadow-sm">
-              <p className="text-sm font-bold text-rose-dusty-dark">{step.step}</p>
+              <p className="text-sm font-bold text-gold-muted-dark">{step.step}</p>
               <h3 className="mt-2 text-xl font-semibold text-foreground">{step.title}</h3>
               <p className="mt-3 text-sm leading-6 text-muted">{step.text}</p>
               <Link href={step.href} className="link-accent mt-4 inline-flex text-sm font-medium">
@@ -322,7 +266,7 @@ export default async function HomePage() {
       </section>
 
       <section aria-labelledby="promo-heading" className="page-container section-spacing">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-rose-dusty via-rose-dusty-dark to-blue-soft-dark p-6 text-white sm:p-12">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold-muted via-gold-muted-dark to-blue-soft-dark p-6 text-white sm:p-12">
           <div className="relative max-w-2xl">
             <p className="section-kicker text-white/70">Акция</p>
             <h2 id="promo-heading" className="heading-section mt-2 text-white">
@@ -332,7 +276,7 @@ export default async function HomePage() {
               Работаем из дома, поэтому каждый заказ обсуждаем лично: дата, адрес, цвета и бюджет.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-white text-rose-dusty-dark hover:bg-neutral-muted">
+              <Button asChild size="lg" className="bg-white text-gold-muted-dark hover:bg-neutral-muted">
                 <Link href="/how-to-order">Как оформить заказ</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-white/40 bg-transparent text-white hover:bg-white/10">
@@ -357,7 +301,7 @@ export default async function HomePage() {
             <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
               <a
                 href={buildTelUrl(settings.phone)}
-                className="touch-target inline-flex items-center gap-2 py-1 text-xl font-bold text-foreground hover:text-rose-dusty-dark sm:text-lg"
+                className="touch-target inline-flex items-center gap-2 py-1 text-xl font-bold text-foreground hover:text-gold-muted-dark sm:text-lg"
               >
                 <Phone className="h-5 w-5 shrink-0" aria-hidden />
                 {formatPhone(settings.phone)}
@@ -371,7 +315,7 @@ export default async function HomePage() {
 
           <div className="rounded-3xl bg-neutral-muted/50 p-6 sm:p-8">
             <div className="mb-5 flex items-center gap-2.5">
-              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-rose-dusty-light/60 text-rose-dusty-dark">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gold-muted-light/60 text-gold-muted-dark">
                 <MessageCircle className="h-5 w-5" aria-hidden />
               </span>
               <div>

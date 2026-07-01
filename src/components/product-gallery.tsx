@@ -36,8 +36,8 @@ export function ProductGallery({
                 onClick={() => setActiveIndex(index)}
                 className={`relative aspect-square w-[4.5rem] shrink-0 overflow-hidden rounded-2xl border bg-neutral-muted transition-all duration-300 sm:w-20 ${
                 activeIndex === index
-                  ? "border-rose-dusty ring-2 ring-rose-dusty-light"
-                  : "border-neutral-border hover:border-rose-dusty-light"
+                  ? "border-gold-muted ring-2 ring-gold-muted-light"
+                  : "border-neutral-border hover:border-gold-muted-light"
               }`}
               aria-label={`Фото ${index + 1}`}
               aria-current={activeIndex === index}

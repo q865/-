@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOut } from "@/auth";
+import { getSettings } from "@/lib/queries/settings";
 
 const links = [
   { href: "/admin", label: "Обзор" },
@@ -9,17 +10,19 @@ const links = [
   { href: "/admin/settings", label: "Настройки" },
 ];
 
-export default function AdminPanelLayout({
+export default async function AdminPanelLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const settings = await getSettings();
+
   return (
     <div className="min-h-screen bg-cream text-[#3d3a36]">
       <header className="sticky top-0 z-40 border-b border-rose-dusty-light/50 bg-cream-card/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4">
           <Link href="/admin" className="font-bold text-[#3d3a36]">
-            Air Cloud MSK · Админка
+            {settings.siteName} · Админка
           </Link>
           <nav className="flex flex-wrap gap-4 text-sm">
             {links.map((link) => (

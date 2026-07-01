@@ -3,10 +3,16 @@ import { prisma } from "@/lib/prisma";
 import { SITE_URL } from "@/lib/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const products = await prisma.product.findMany({
-    where: { published: true },
-    select: { slug: true, updatedAt: true },
-  });
+  const [products, categories] = await Promise.all([
+    prisma.product.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true },
+    }),
+    prisma.category.findMany({
+      select: { slug: true, updatedAt: true },
+      orderBy: { sortOrder: "asc" },
+    }),
+  ]);
 
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -41,6 +47,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  const categoryPages: MetadataRoute.Sitemap = categories.map((category) => ({
+    url: `${SITE_URL}/catalog?category=${category.slug}`,
+    lastModified: category.updatedAt,
+    changeFrequency: "weekly",
+    priority: 0.75,
+  }));
+
   const productPages: MetadataRoute.Sitemap = products.map((product) => ({
     url: `${SITE_URL}/product/${product.slug}`,
     lastModified: product.updatedAt,
@@ -48,5 +61,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...productPages];
+  return [...staticPages, ...categoryPages, ...productPages];
 }

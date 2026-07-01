@@ -12,7 +12,6 @@ import { cn, formatPrice, getProductGallery } from "@/lib/utils";
 import { productGridClassName } from "@/components/ui/product-grid";
 import { ProductGallery } from "@/components/product-gallery";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { getPublishedProductBySlug, getRelatedProducts } from "@/lib/queries/products";
 import { getSettings } from "@/lib/queries/settings";
@@ -100,23 +99,22 @@ export default async function ProductPage({ params }: { params: Params }) {
               </p>
             ) : null}
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Оформить заказ</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div className="premium-card p-5 sm:p-6">
+              <h2 className="text-lg font-semibold text-foreground">Оформить заказ</h2>
+              <div className="mt-4">
                 <OrderButtons compact settings={settings} productName={product.name} />
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Или оставьте заявку</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div id="form" className="premium-card scroll-mt-24 p-5 sm:p-6">
+              <h2 className="text-lg font-semibold text-foreground">Или оставьте заявку</h2>
+              <p className="mt-2 text-sm text-muted">
+                Опишите дату и пожелания — перезвоним или напишем в мессенджер.
+              </p>
+              <div className="mt-4">
                 <ContactForm productName={product.name} />
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
 

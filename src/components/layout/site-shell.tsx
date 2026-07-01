@@ -1,6 +1,6 @@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { MobileOrderBar } from "@/components/layout/mobile-order-bar";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { getFooterCategories } from "@/lib/queries/categories";
 import { getSettings } from "@/lib/queries/settings";
 
@@ -13,14 +13,11 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header settings={settings} />
-      <main
-        id="main-content"
-        className="flex-1 pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0"
-      >
+      <main id="main-content" className="flex-1 bottom-nav-offset md:pb-0">
         {children}
       </main>
       <Footer settings={settings} categories={categories} />
-      <MobileOrderBar settings={settings} />
+      <MobileBottomNav />
     </>
   );
 }

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SITE_BRAND_NAME } from "@/lib/site-config";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function AdminLoginPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Вход в админку</CardTitle>
-          <p className="text-sm text-[#9c9590]">Air Cloud MSK</p>
+          <p className="text-sm text-[#9c9590]">{SITE_BRAND_NAME}</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

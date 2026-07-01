@@ -16,7 +16,7 @@ export function buildLocalBusinessJsonLd(settings: SiteSettings) {
     description: settings.seoDescription,
     url: SITE_URL,
     telephone: settings.phone,
-    image: `${SITE_URL}/placeholder-product.svg`,
+    image: `${SITE_URL}/uploads/portfolio/nabor-gender-pati.jpg`,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Москва",

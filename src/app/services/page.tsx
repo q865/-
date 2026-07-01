@@ -8,6 +8,7 @@ import { ProductCard } from "@/components/product-card";
 import { ProductImage } from "@/components/product-image";
 import { Button } from "@/components/ui/button";
 import { buildPageMetadata } from "@/lib/page-metadata";
+import { SITE_BRAND_NAME } from "@/lib/site-config";
 import { prisma } from "@/lib/prisma";
 import { getSettings } from "@/lib/queries/settings";
 import { businessFaq, businessSeoParagraphs, businessServices } from "@/lib/services-content";
@@ -15,8 +16,7 @@ import { resolveStockImage } from "@/lib/stock-images";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Оформление витрин, открытие магазинов и корпоративы",
-  description:
-    "Коммерческое оформление шарами в Москве: витрины магазинов, grand opening, корпоративы и промо-зоны. Расчёт под задачу. Air Cloud MSK.",
+  description: `Коммерческое оформление шарами в Москве: витрины, grand opening, корпоративы и промо-зоны. ${SITE_BRAND_NAME}.`,
   path: "/services",
 });
 
@@ -85,7 +85,7 @@ export default async function ServicesPage() {
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-5">
-                  <div className="mb-2 flex items-center gap-2 text-rose-dusty-dark">
+                  <div className="mb-2 flex items-center gap-2 text-gold-muted-dark">
                     <Icon className="h-5 w-5 shrink-0" aria-hidden />
                     <h2 className="text-lg font-semibold text-foreground">{service.title}</h2>
                   </div>
