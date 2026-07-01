@@ -40,16 +40,17 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: settings.siteName,
       locale: "ru_RU",
       type: "website",
+      images: [{ url: "/brand/logo.png", width: 640, height: 640, alt: settings.siteName }],
     },
     twitter: {
       card: "summary_large_image",
       title: settings.seoTitle,
       description: settings.seoDescription,
-      images: ["/logo.svg"],
+      images: ["/brand/logo.png"],
     },
     icons: {
-      icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-      apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
+      icon: [{ url: "/brand/logo.png", type: "image/png", sizes: "640x640" }],
+      apple: [{ url: "/brand/logo.png", type: "image/png", sizes: "640x640" }],
     },
   };
 }
