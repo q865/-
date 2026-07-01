@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Product, Category } from "@/generated/prisma/client";
 import { ProductImage } from "@/components/product-image";
 import { Badge } from "@/components/ui/badge";
+import { resolveStockImage } from "@/lib/stock-images";
 import { formatPrice, getProductCoverImage } from "@/lib/utils";
 
 type ProductWithCategory = Product & { category: Category };
@@ -11,12 +12,17 @@ export function ProductCard({ product }: { product: ProductWithCategory }) {
     slug: product.slug,
     categorySlug: product.category.slug,
   });
+  const fallbackImage = resolveStockImage({
+    slug: product.slug,
+    categorySlug: product.category.slug,
+  });
 
   return (
     <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-neutral-border/70 bg-neutral-surface shadow-sm transition-shadow duration-300 [@media(hover:hover)]:shadow-float">
       <Link href={`/product/${product.slug}`} className="relative block aspect-square overflow-hidden bg-neutral-muted">
         <ProductImage
           src={image}
+          fallbackSrc={fallbackImage}
           alt={product.name}
           fill
           className="object-cover transition-transform duration-500 ease-out [@media(hover:hover)]:group-hover:scale-[1.04]"

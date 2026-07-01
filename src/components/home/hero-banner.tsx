@@ -33,7 +33,7 @@ export function HeroBanner({
   return (
     <FadeIn delayMs={40}>
       <div className="relative overflow-hidden rounded-3xl bg-neutral-muted shadow-float">
-        <div className="relative aspect-[3/4] max-h-[min(520px,85vh)] sm:aspect-[21/9] sm:max-h-none lg:aspect-[2.4/1]">
+        <div className="relative aspect-[4/5] max-h-[min(460px,72vh)] sm:aspect-[21/9] sm:max-h-none lg:aspect-[2.4/1]">
           {imageSrc ? (
             <ProductImage
               src={imageSrc}
@@ -58,7 +58,7 @@ export function HeroBanner({
               >
                 {title}
               </h1>
-              <p className="mt-2 line-clamp-3 max-w-md text-xs leading-5 text-white/90 sm:mt-3 sm:line-clamp-none sm:text-base sm:leading-7">
+              <p className="mt-2 max-w-md text-xs leading-5 text-white/90 sm:mt-3 sm:text-base sm:leading-7">
                 {subtitle}
               </p>
               <div className="mt-4 flex flex-col gap-2 sm:mt-5 sm:flex-row sm:gap-3">

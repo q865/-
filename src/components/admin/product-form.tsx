@@ -69,14 +69,16 @@ export function ProductForm({
 
     try {
       const response = await fetch("/api/upload", { method: "POST", body });
-      if (!response.ok) throw new Error("upload failed");
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(typeof data.error === "string" ? data.error : "Не удалось загрузить фото");
+      }
       setImages((prev) => {
         const cleaned = prev.filter((item) => !isPlaceholderImage(item));
         return [data.url, ...cleaned];
       });
-    } catch {
-      setError("Не удалось загрузить фото");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Не удалось загрузить фото");
     } finally {
       setUploading(false);
     }

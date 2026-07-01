@@ -18,7 +18,7 @@ export function Logo({ className, variant = "mark", priority }: LogoProps) {
       height={640}
       priority={priority}
       className={cn(
-        "h-full w-full object-cover",
+        "h-full w-full object-contain p-0.5",
         variant === "full" && "rounded-2xl",
         className,
       )}

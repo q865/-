@@ -1,64 +1,313 @@
-# Air Cloud MSK
+# Воздушное облако — сайт-каталог гелевых шаров
 
-Сайт-каталог композиций из гелевых шаров с админ-панелью.
+Каталог композиций из гелевых шаров с админ-панелью, формой заявки и заказом через мессенджеры.
 
-## Возможности
+**Сайт:** https://air-cloud-msk.ru  
+**Админка:** https://air-cloud-msk.ru/admin/login  
+**Репозиторий:** https://github.com/q865/-
 
-- Каталог товаров с категориями
-- Карточки товаров с кнопками заказа в Telegram, VK, MAX и по телефону
-- Форма заявки
-- Админка: товары, категории, заявки, настройки сайта
-- Загрузка фото товаров
+---
+
+## Стек
+
+| Компонент | Технология |
+|-----------|------------|
+| Сайт | Next.js 16, TypeScript, Tailwind CSS v4 |
+| База данных | PostgreSQL (Neon) |
+| ORM | Prisma 7 |
+| Авторизация админки | NextAuth v5 (Credentials) |
+| Хостинг | Vercel |
+| Фото из админки | Vercel Blob |
+| Домен | Jino → DNS на Vercel |
+
+---
+
+## Страницы сайта
+
+| URL | Описание |
+|-----|----------|
+| `/` | Главная: hero, категории, популярные товары, FAQ |
+| `/catalog` | Каталог с поиском, сортировкой и фильтром по категориям |
+| `/product/[slug]` | Карточка товара |
+| `/services` | Услуги для бизнеса (витрины, открытия, корпоративы) |
+| `/how-to-order` | Как оформить заказ |
+| `/contacts` | Контакты и форма заявки |
+| `/admin` | Админ-панель (требует входа) |
+
+---
 
 ## Локальный запуск
 
+### 1. Зависимости
+
 ```bash
 npm install
-npm run db:push
-npm run db:seed
+```
+
+### 2. Переменные окружения
+
+Скопируйте `.env.example` в `.env` и заполните:
+
+```bash
+cp .env.example .env
+```
+
+| Переменная | Описание |
+|------------|----------|
+| `DATABASE_URL` | PostgreSQL connection string (Neon или локальный Docker) |
+| `AUTH_SECRET` | Секрет сессии: `openssl rand -base64 32` |
+| `ADMIN_EMAIL` | Email для входа в админку |
+| `ADMIN_PASSWORD` | Пароль админки |
+| `NEXTAUTH_URL` | `http://localhost:3000` локально |
+| `BLOB_READ_WRITE_TOKEN` | Токен Vercel Blob (опционально локально; без него фото пишутся в `public/uploads/`) |
+
+### 3. База данных
+
+```bash
+npm run db:push    # применить схему
+npm run db:seed    # категории, 25 товаров, настройки сайта
+```
+
+### 4. Запуск
+
+```bash
 npm run dev
 ```
 
-Сайт: http://localhost:3000  
-Админка: http://localhost:3000/admin/login
+- Сайт: http://localhost:3000  
+- Админка: http://localhost:3000/admin/login  
 
-**Данные для входа по умолчанию** (из `.env`):
-- Email: `admin@air-cloud-msk.ru`
-- Пароль: `admin123` — **смените перед деплоем!**
+---
 
-## Деплой на Vercel
+## Деплой на Vercel (production)
 
-1. Создайте проект на [Supabase](https://supabase.com) (PostgreSQL)
-2. В `prisma/schema.prisma` смените `provider = "sqlite"` на `provider = "postgresql"`
-3. Укажите `DATABASE_URL` из Supabase в переменных Vercel
-4. Задайте `AUTH_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `NEXTAUTH_URL=https://air-cloud-msk.ru`
-5. Задеплойте репозиторий на [Vercel](https://vercel.com)
-6. Выполните миграцию: `npx prisma db push` (локально с production DATABASE_URL) или через Vercel CLI
-7. Запустите seed: `npm run db:seed`
+### 1. База Neon
 
-### Привязка домена air-cloud-msk.ru (Jino)
+1. Создайте проект на [neon.tech](https://neon.tech)
+2. Скопируйте **connection string** (pooler, порт 6543)
+3. Добавьте в Vercel → Project → Settings → Environment Variables как `DATABASE_URL`
 
-В панели DNS Jino:
+### 2. Vercel Blob (фото из админки)
 
-| Запись | Значение |
-|--------|----------|
-| `air-cloud-msk.ru` A | `76.76.21.21` |
-| `www` CNAME | `cname.vercel-dns.com` |
+1. Vercel → Project → **Storage** → Create → **Blob**
+2. Переменная `BLOB_READ_WRITE_TOKEN` подключится автоматически
+3. Без Blob загрузка фото на проде **не сохраняется** между деплоями
+
+### 3. Остальные переменные на Vercel
+
+| Переменная | Production |
+|------------|------------|
+| `AUTH_SECRET` | Случайная строка (`openssl rand -base64 32`) |
+| `ADMIN_EMAIL` | `admin@air-cloud-msk.ru` |
+| `ADMIN_PASSWORD` | Сильный пароль (не `admin123`) |
+| `NEXTAUTH_URL` | `https://air-cloud-msk.ru` |
+
+### 4. Деплой
+
+Репозиторий подключён к Vercel — push в `main` деплоит автоматически.
+
+```bash
+git push origin main
+# или вручную:
+vercel deploy --prod
+```
+
+После первого деплоя с `DATABASE_URL`:
+
+```bash
+DATABASE_URL="..." npm run db:seed
+```
+
+(или seed выполняется при `vercel-build`, если схема уже есть)
+
+### 5. DNS (Jino)
+
+В панели DNS для `air-cloud-msk.ru`:
+
+| Тип | Имя | Значение |
+|-----|-----|----------|
+| A | `@` | `64.29.17.1` |
+| A | `@` | `216.198.79.1` |
+| CNAME | `www` | `cname.vercel-dns.com` |
+
+Удалите старую A-запись на IP Jino (`81.177.141.15`), если она ещё есть.
 
 В Vercel → Settings → Domains добавьте `air-cloud-msk.ru` и `www.air-cloud-msk.ru`.
 
-## Контакты бизнеса
+---
 
-- Telegram: https://t.me/air_cloud_msk
-- VK: https://vk.ru/vozdushnyesharymsk
-- Телефон: +7 (965) 295-59-56
-- MAX: добавьте ссылку на профиль в админке → Настройки
+## Админ-панель — инструкция
 
-## Структура
+### Вход
 
-- `/` — главная
-- `/catalog` — каталог
-- `/product/[slug]` — товар
-- `/how-to-order` — как заказать
-- `/contacts` — контакты
-- `/admin` — админ-панель
+1. Откройте https://air-cloud-msk.ru/admin/login  
+2. Email и пароль — из переменных `ADMIN_EMAIL` / `ADMIN_PASSWORD` на Vercel  
+   (Vercel → Project → Settings → Environment Variables)
+
+### Обзор (`/admin`)
+
+Сводка: количество товаров, категорий, последние заявки.
+
+### Товары (`/admin/products`)
+
+- **Добавить** — кнопка «Новый товар»
+- **Название** — отображается в каталоге
+- **Slug** — URL (`/product/nazvanie-tovara`), генерируется из названия
+- **Цена** — в рублях, на сайте показывается «от X ₽»
+- **Категория** — выберите из списка
+- **Фото** — загрузите JPG/PNG/WebP до 5 МБ (сохраняется в Vercel Blob)
+- **Хит** — показывает бейдж «Хит» и приоритет на главной
+- **Опубликован** — скрывает товар с сайта, если выключен
+
+### Категории (`/admin/categories`)
+
+- Название, slug, порядок сортировки (`sortOrder`)
+- Slug используется в URL: `/catalog?category=gender-pati`
+
+### Заявки (`/admin/orders`)
+
+Заявки с формы на странице «Контакты»: имя, телефон, комментарий.
+
+### Настройки (`/admin/settings`)
+
+Редактируется **без кода**:
+
+| Поле | Где видно |
+|------|-----------|
+| Название сайта | Шапка, подвал, title |
+| Заголовок hero | Большой текст на главной (до 80 символов) |
+| Подзаголовок hero | Текст под заголовком (до 200 символов, 1–2 предложения) |
+| Telegram / VK / MAX | Кнопки заказа и контакты |
+| Телефон | Шапка, контакты, кнопка «Позвонить» |
+| SEO заголовок / описание | Поисковики, вкладка браузера |
+
+**Совет:** не используйте длинные списки в hero — текст обрезается на телефоне.
+
+---
+
+## Как редактировать контент
+
+### Без кода (админка)
+
+- Товары, цены, фото → **Товары**
+- Контакты, hero, SEO → **Настройки**
+- Заявки клиентов → **Заявки**
+
+### В коде (GitHub)
+
+| Что | Файл |
+|-----|------|
+| FAQ, блоки «Почему мы», SEO-тексты внизу главной | `src/lib/home-content.ts` |
+| Услуги для бизнеса | `src/lib/services-content.ts` |
+| Дефолты настроек (при seed) | `src/lib/constants/defaults.ts` |
+| Seed-товары (25 позиций) | `src/lib/seed-products.ts` |
+| Название бренда, домен | `src/lib/site-config.ts` |
+| Portfolio-фото (локальные) | `public/uploads/portfolio/{slug}.jpg` |
+
+После изменения seed-файлов:
+
+```bash
+npm run db:seed
+```
+
+---
+
+## Фото товаров — два способа
+
+### 1. Через админку (рекомендуется на проде)
+
+1. Товары → редактировать → «Загрузить фото»
+2. Файл сохраняется в **Vercel Blob**
+3. URL записывается в базу автоматически
+
+**Требуется:** `BLOB_READ_WRITE_TOKEN` на Vercel.
+
+### 2. Portfolio в репозитории (для стартового наполнения)
+
+Фото лежат в git:
+
+```
+public/uploads/portfolio/nabor-gender-pati.jpg
+public/uploads/portfolio/fontan-iz-sharov.jpg
+...
+```
+
+Имена файлов = slug товара. Скрипт загрузки:
+
+```bash
+npm run portfolio:download
+```
+
+Эти фото используются как fallback, если у товара нет своих upload-фото.
+
+---
+
+## Контакты бизнеса (по умолчанию)
+
+- **Telegram:** https://t.me/air_cloud_msk  
+- **VK:** https://vk.ru/vozdushnyesharymsk  
+- **Телефон:** +7 (965) 295-59-56  
+- **MAX:** добавьте ссылку в админке → Настройки  
+
+---
+
+## Частые проблемы
+
+### Фото не загружаются в админке
+
+- На Vercel: проверьте **Storage → Blob** и `BLOB_READ_WRITE_TOKEN`
+- Формат: JPEG, PNG, WebP, GIF; максимум 5 МБ
+- После загрузки нажмите **Сохранить** на форме товара
+
+### Сайт не открывается по домену
+
+- DNS должен указывать на Vercel (`64.29.17.1`), не на Jino
+- Подождите 15–60 минут после смены DNS
+- Временно: https://air-cloud-msk.vercel.app
+
+### Не могу войти в админку
+
+- Пароль берётся из Vercel env `ADMIN_PASSWORD`, не из локального `.env`
+- Локальный `admin123` работает только при локальном `.env`
+
+### Текст на главной обрезан
+
+- Сократите hero в **Настройки** (до 200 символов в подзаголовке)
+- Или выполните `npm run db:seed` — подтянет эталонные тексты из `defaults.ts`
+
+---
+
+## Скрипты
+
+```bash
+npm run dev          # локальный сервер
+npm run build        # production-сборка
+npm run db:push      # схема БД
+npm run db:seed      # наполнение данными
+npm run portfolio:download  # скачать portfolio-фото
+npm run lint         # ESLint
+```
+
+---
+
+## Структура проекта
+
+```
+src/
+  app/              # страницы Next.js (App Router)
+  components/       # UI-компоненты
+  lib/              # бизнес-логика, queries, контент
+  generated/prisma/ # Prisma client
+prisma/
+  schema.prisma     # модели БД
+  seed.ts           # seed-скрипт
+public/
+  brand/            # логотип
+  uploads/portfolio/ # portfolio-фото (в git)
+```
+
+---
+
+## Лицензия
+
+Private project. All rights reserved.

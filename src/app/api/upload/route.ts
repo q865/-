@@ -1,5 +1,6 @@
-import { mkdir, writeFile } from "fs/promises";
 import path from "path";
+import { put } from "@vercel/blob";
+import { mkdir, writeFile } from "fs/promises";
 import { requireAdminSession } from "@/lib/api/auth-guard";
 import { jsonError, jsonOk } from "@/lib/api/response";
 import { buildUploadFilename, UploadValidationError, validateImageUpload } from "@/lib/upload";
@@ -19,8 +20,16 @@ export async function POST(request: Request) {
     const buffer = await validateImageUpload(file);
     const ext = path.extname(file.name).toLowerCase();
     const filename = buildUploadFilename(ext);
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
 
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      const blob = await put(`products/${filename}`, buffer, {
+        access: "public",
+        contentType: file.type,
+      });
+      return jsonOk({ url: blob.url }, 201);
+    }
+
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
     await mkdir(uploadDir, { recursive: true });
     await writeFile(path.join(uploadDir, filename), buffer);
 
@@ -31,6 +40,6 @@ export async function POST(request: Request) {
     }
 
     console.error("[upload]", error);
-    return jsonError("Не удалось загрузить файл", 500);
+    return jsonError("Не удалось загрузить файл. Проверьте BLOB_READ_WRITE_TOKEN на Vercel.", 500);
   }
 }

@@ -94,15 +94,21 @@ export default async function HomePage() {
 
       <section aria-label="Преимущества сервиса" className="mt-6 border-b border-neutral-border bg-neutral-surface sm:mt-8">
         <div className="page-container grid grid-cols-2 gap-3 py-6 sm:grid-cols-4 sm:gap-4 sm:py-8">
-          {trustItems.map((item) => (
+          {trustItems.map((item) => {
+            const Icon = item.icon;
+            return (
             <div
               key={item.label}
               className="rounded-2xl border border-neutral-border/60 bg-neutral-muted/40 px-3 py-3 sm:px-4 sm:py-4"
             >
+              <div className="mb-2 flex h-9 w-9 items-center justify-center rounded-xl bg-gold-muted-light/80 text-gold-muted-dark">
+                <Icon className="h-4 w-4" aria-hidden />
+              </div>
               <p className="text-sm font-semibold text-foreground">{item.label}</p>
               <p className="mt-1 text-xs text-muted sm:text-sm">{item.detail}</p>
             </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
