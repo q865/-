@@ -27,7 +27,7 @@ export function SocialLinks({
         href={settings.telegramUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition hover:bg-blue-soft-light hover:text-blue-soft-dark"
+        className="icon-hover-bounce inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-blue-soft-light hover:text-blue-soft-dark"
         aria-label="Telegram"
       >
         <Send className="h-4 w-4" />
@@ -36,7 +36,7 @@ export function SocialLinks({
         href={settings.vkUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition hover:bg-rose-dusty-light hover:text-rose-dusty-dark"
+        className="icon-hover-bounce inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-rose-dusty-light hover:text-rose-dusty-dark"
         aria-label="ВКонтакте"
       >
         <VkIcon className="h-4 w-4" />
@@ -46,7 +46,7 @@ export function SocialLinks({
           href={settings.maxUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition hover:bg-rose-dusty-light/60"
+          className="icon-hover-bounce inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-rose-dusty-light/60"
           aria-label="MAX"
         >
           <MaxIcon className="h-4 w-4" />
@@ -54,7 +54,7 @@ export function SocialLinks({
       ) : null}
       <a
         href={buildTelUrl(settings.phone)}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition hover:bg-rose-dusty-light hover:text-rose-dusty-dark"
+        className="icon-hover-bounce inline-flex h-9 w-9 items-center justify-center rounded-full bg-neutral-muted text-muted transition-colors duration-300 hover:bg-rose-dusty-light hover:text-rose-dusty-dark"
         aria-label="Позвонить"
       >
         <Phone className="h-4 w-4" />

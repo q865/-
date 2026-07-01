@@ -7,6 +7,7 @@ import { ContactForm } from "@/components/contact-form";
 import { JsonLd } from "@/components/home/json-ld";
 import { OrderButtons } from "@/components/order-buttons";
 import { ProductCard } from "@/components/product-card";
+import { StaggerGrid } from "@/components/motion/stagger-grid";
 import { ProductGallery } from "@/components/product-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -117,11 +118,11 @@ export default async function ProductPage({ params }: { params: Params }) {
               Похожие композиции
             </h2>
             <p className="mt-2 text-muted">Ещё варианты из категории «{product.category.name}»</p>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <StaggerGrid className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {relatedProducts.map((item) => (
                 <ProductCard key={item.id} product={item} />
               ))}
-            </div>
+            </StaggerGrid>
           </section>
         ) : null}
       </div>

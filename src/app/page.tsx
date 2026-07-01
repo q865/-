@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
 import { JsonLd } from "@/components/home/json-ld";
+import { FadeIn } from "@/components/motion/fade-in-section";
+import { StaggerGrid } from "@/components/motion/stagger-grid";
 import { OrderButtons } from "@/components/order-buttons";
 import { ProductCard } from "@/components/product-card";
 import { ProductImage } from "@/components/product-image";
@@ -74,10 +76,20 @@ export default async function HomePage() {
     <SiteShell>
       <JsonLd data={structuredData} />
 
-      <section aria-labelledby="hero-heading" className="border-b border-neutral-border bg-neutral-surface">
-        <div className="page-container grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full bg-rose-dusty-light/50 px-4 py-2 text-sm font-medium text-rose-dusty-dark">
+      <section aria-labelledby="hero-heading" className="relative overflow-hidden border-b border-neutral-border bg-neutral-surface">
+        <div className="floating-orb -left-16 top-8 h-48 w-48 bg-rose-dusty-light/60 animate-float-gentle" />
+        <div
+          className="floating-orb right-0 top-12 h-40 w-40 bg-lavender-soft/70 animate-float-gentle"
+          style={{ animationDelay: "2s" }}
+        />
+        <div
+          className="floating-orb bottom-4 left-1/3 h-32 w-32 bg-mint-soft/60 animate-float-gentle"
+          style={{ animationDelay: "4s" }}
+        />
+
+        <div className="page-container relative grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
+          <FadeIn className="space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-rose-dusty-light/50 bg-rose-dusty-light/40 px-4 py-2 text-sm font-medium text-rose-dusty-dark shadow-sm">
               <Sparkles className="h-4 w-4" aria-hidden />
               Гелевые шары с доставкой по Москве
             </div>
@@ -102,30 +114,30 @@ export default async function HomePage() {
                 </a>
               </Button>
             </div>
-          </div>
+          </FadeIn>
 
           {heroImages.length > 0 ? (
-            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <FadeIn delayMs={120} className="grid grid-cols-2 gap-3 sm:gap-4">
               {heroImages.map((product, index) => (
                 <Link
                   key={product.id}
                   href={`/product/${product.slug}`}
-                  className={`group overflow-hidden rounded-2xl border border-neutral-border bg-neutral-muted shadow-sm transition hover:shadow-md ${
+                  className={`premium-card group overflow-hidden ${
                     index === 1 ? "translate-y-4" : index === 3 ? "-translate-y-2" : ""
                   }`}
                 >
-                  <div className="relative aspect-square">
+                  <div className="relative aspect-square overflow-hidden bg-neutral-muted">
                     <ProductImage
                       src={getProductCoverImage(product.images)}
                       alt={`${product.name} — гелевые шары ${product.category.name}`}
                       fill
-                      className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                      className="object-cover transition-transform duration-500 ease-out [@media(hover:hover)]:group-hover:scale-[1.03]"
                       sizes="(max-width: 1024px) 50vw, 25vw"
                     />
                   </div>
                 </Link>
               ))}
-            </div>
+            </FadeIn>
           ) : null}
         </div>
       </section>
@@ -180,11 +192,11 @@ export default async function HomePage() {
               Готовые идеи с ориентировочной ценой — точную стоимость согласуем после обсуждения
               деталей заказа.
             </p>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <StaggerGrid className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {showcaseProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
-            </div>
+            </StaggerGrid>
             <div className="mt-10 text-center">
               <Button asChild variant="outline">
                 <Link href="/catalog">Показать все композиции</Link>

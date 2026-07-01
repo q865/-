@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteShell } from "@/components/layout/site-shell";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { ProductCard } from "@/components/product-card";
+import { StaggerGrid } from "@/components/motion/stagger-grid";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { prisma } from "@/lib/prisma";
 import { getCategories } from "@/lib/queries/categories";
@@ -132,11 +133,11 @@ export default async function CatalogPage({
             </Link>
           </div>
         ) : (
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <StaggerGrid className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
+          </StaggerGrid>
         )}
       </div>
     </SiteShell>

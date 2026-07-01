@@ -11,7 +11,7 @@ export function MobileOrderBar({ settings }: { settings: SiteSettings }) {
         href={buildTelegramOrderUrl(settings.telegramUrl)}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-rose-dusty text-sm font-semibold text-white shadow-lg shadow-rose-dusty/25 transition hover:bg-rose-dusty-dark"
+        className="btn-premium-glow flex h-12 w-full items-center justify-center gap-2 rounded-full bg-rose-dusty text-sm font-semibold text-white shadow-float transition-colors duration-300 hover:bg-rose-dusty-dark"
       >
         <Send className="h-4 w-4" aria-hidden />
         Написать в Telegram

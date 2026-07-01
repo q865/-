@@ -4,18 +4,18 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-all duration-300 disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-rose-dusty-light focus-visible:ring-offset-2 focus-visible:ring-offset-cream",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all duration-300 ease-out disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-rose-dusty-light focus-visible:ring-offset-2 focus-visible:ring-offset-cream",
   {
     variants: {
       variant: {
         default:
-          "bg-rose-dusty text-white shadow-sm shadow-rose-dusty/20 hover:bg-rose-dusty-dark hover:shadow-md hover:shadow-rose-dusty/25",
+          "bg-rose-dusty text-white shadow-float btn-premium-glow hover:bg-rose-dusty-dark",
         secondary:
-          "bg-blue-soft-light text-blue-soft-dark hover:bg-blue-soft/40",
+          "bg-blue-soft-light text-blue-soft-dark shadow-sm hover:bg-blue-soft/40 hover:shadow-float",
         outline:
-          "border border-rose-dusty-light bg-cream-card text-rose-dusty-dark hover:bg-rose-dusty-light/30",
+          "border border-rose-dusty-light/80 bg-neutral-surface text-rose-dusty-dark hover:border-rose-dusty-light hover:bg-rose-dusty-light/25 hover:shadow-float",
         ghost: "text-rose-dusty-dark hover:bg-rose-dusty-light/40",
-        dark: "bg-[#3d3a36] text-cream hover:bg-[#2d2a26]",
+        dark: "bg-foreground text-cream shadow-float hover:bg-foreground/90",
       },
       size: {
         default: "h-11 px-6 py-2",
