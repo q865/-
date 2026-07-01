@@ -1,29 +1,36 @@
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
-import { NextResponse } from "next/server";
-import { auth } from "@/auth";
+import { requireAdminSession } from "@/lib/api/auth-guard";
+import { jsonError, jsonOk } from "@/lib/api/response";
+import { buildUploadFilename, UploadValidationError, validateImageUpload } from "@/lib/upload";
 
 export async function POST(request: Request) {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { unauthorized } = await requireAdminSession();
+  if (unauthorized) return unauthorized;
+
+  try {
+    const formData = await request.formData();
+    const file = formData.get("file");
+
+    if (!(file instanceof File)) {
+      return jsonError("Файл не передан", 400);
+    }
+
+    const buffer = await validateImageUpload(file);
+    const ext = path.extname(file.name).toLowerCase();
+    const filename = buildUploadFilename(ext);
+    const uploadDir = path.join(process.cwd(), "public", "uploads");
+
+    await mkdir(uploadDir, { recursive: true });
+    await writeFile(path.join(uploadDir, filename), buffer);
+
+    return jsonOk({ url: `/uploads/${filename}` }, 201);
+  } catch (error) {
+    if (error instanceof UploadValidationError) {
+      return jsonError(error.message, 400);
+    }
+
+    console.error("[upload]", error);
+    return jsonError("Не удалось загрузить файл", 500);
   }
-
-  const formData = await request.formData();
-  const file = formData.get("file");
-
-  if (!(file instanceof File)) {
-    return NextResponse.json({ error: "No file" }, { status: 400 });
-  }
-
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-  const ext = path.extname(file.name) || ".jpg";
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-
-  await mkdir(uploadDir, { recursive: true });
-  await writeFile(path.join(uploadDir, filename), buffer);
-
-  return NextResponse.json({ url: `/uploads/${filename}` });
 }

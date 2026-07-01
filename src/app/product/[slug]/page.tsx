@@ -1,83 +1,94 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteShell } from "@/components/layout/site-shell";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { ContactForm } from "@/components/contact-form";
+import { JsonLd } from "@/components/home/json-ld";
 import { OrderButtons } from "@/components/order-buttons";
-import { ProductImage } from "@/components/product-image";
+import { ProductCard } from "@/components/product-card";
+import { ProductGallery } from "@/components/product-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { prisma } from "@/lib/prisma";
-import { getSettings } from "@/lib/settings";
+import { buildPageMetadata } from "@/lib/page-metadata";
+import { getPublishedProductBySlug, getRelatedProducts } from "@/lib/queries/products";
+import { getSettings } from "@/lib/queries/settings";
+import { buildProductJsonLd } from "@/lib/seo";
+import { SITE_URL } from "@/lib/site-config";
 import { formatPrice, getProductGallery } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ slug: string }>;
 
-export async function generateMetadata({ params }: { params: Params }) {
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({ where: { slug } });
+  const product = await getPublishedProductBySlug(slug);
   if (!product) return {};
 
+  const description =
+    product.description ??
+    `${product.name} — композиция из гелевых шаров (${product.category.name}). Заказ с доставкой по Москве.`;
+
   return {
-    title: product.name,
-    description: product.description ?? undefined,
+    ...buildPageMetadata({
+      title: `${product.name} — от ${formatPrice(product.price)}`,
+      description,
+      path: `/product/${product.slug}`,
+    }),
+    openGraph: {
+      title: product.name,
+      description,
+      url: `${SITE_URL}/product/${product.slug}`,
+      type: "website",
+    },
   };
 }
 
 export default async function ProductPage({ params }: { params: Params }) {
   const { slug } = await params;
-  const [product, settings] = await Promise.all([
-    prisma.product.findUnique({
-      where: { slug, published: true },
-      include: { category: true },
-    }),
-    getSettings(),
-  ]);
+  const product = await getPublishedProductBySlug(slug);
 
   if (!product) notFound();
+
+  const [settings, relatedProducts] = await Promise.all([
+    getSettings(),
+    getRelatedProducts(product.categoryId, product.id),
+  ]);
 
   const gallery = getProductGallery(product.images);
 
   return (
     <SiteShell>
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <JsonLd data={buildProductJsonLd(product)} />
+
+      <div className="page-container py-12">
+        <Breadcrumbs
+          items={[
+            { name: "Главная", href: "/" },
+            { name: "Каталог", href: "/catalog" },
+            { name: product.category.name, href: `/catalog?category=${product.category.slug}` },
+            { name: product.name, href: `/product/${product.slug}`, current: true },
+          ]}
+        />
+
         <div className="grid gap-10 lg:grid-cols-2">
-          <div className="space-y-4">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-gradient-to-br from-rose-dusty-light/30 to-blue-soft-light/40 ring-1 ring-rose-dusty-light/40">
-              <ProductImage
-                src={gallery[0]}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-            {gallery.length > 1 ? (
-              <div className="grid grid-cols-4 gap-3">
-                {gallery.slice(1, 5).map((image) => (
-                  <div
-                    key={image}
-                    className="relative aspect-square overflow-hidden rounded-2xl"
-                  >
-                    <ProductImage src={image} alt={product.name} fill className="object-cover" />
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </div>
+          <ProductGallery images={gallery} alt={product.name} />
 
           <div className="space-y-6">
             <div>
-              <Badge>{product.category.name}</Badge>
-              <h1 className="mt-3 text-4xl font-bold text-[#3d3a36]">{product.name}</h1>
-              <p className="mt-4 text-3xl font-bold text-rose-dusty-dark">
-                от {formatPrice(product.price)}
+              <Link href={`/catalog?category=${product.category.slug}`} className="inline-block">
+                <Badge>{product.category.name}</Badge>
+              </Link>
+              <h1 className="mt-3 text-4xl font-bold text-foreground">{product.name}</h1>
+              <p className="mt-4 text-3xl font-bold text-foreground">от {formatPrice(product.price)}</p>
+              <p className="mt-2 text-sm text-muted">
+                Точная стоимость зависит от размера и дополнений — согласуем при заказе
               </p>
             </div>
 
             {product.description ? (
-              <p className="text-lg leading-8 text-[#6b6560]">{product.description}</p>
+              <p className="text-lg leading-8 text-muted">{product.description}</p>
             ) : null}
 
             <Card>
@@ -99,6 +110,20 @@ export default async function ProductPage({ params }: { params: Params }) {
             </Card>
           </div>
         </div>
+
+        {relatedProducts.length > 0 ? (
+          <section aria-labelledby="related-heading" className="mt-16 border-t border-neutral-border pt-16">
+            <h2 id="related-heading" className="heading-section">
+              Похожие композиции
+            </h2>
+            <p className="mt-2 text-muted">Ещё варианты из категории «{product.category.name}»</p>
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {relatedProducts.map((item) => (
+                <ProductCard key={item.id} product={item} />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
     </SiteShell>
   );

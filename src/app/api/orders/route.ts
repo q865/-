@@ -1,33 +1,35 @@
-import { auth } from "@/auth";
-import { NextResponse } from "next/server";
-import { z } from "zod";
+import { requireAdminSession } from "@/lib/api/auth-guard";
+import { jsonError, jsonFromError, jsonOk } from "@/lib/api/response";
 import { prisma } from "@/lib/prisma";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { orderSchema } from "@/lib/validations";
 
-const orderSchema = z.object({
-  name: z.string().min(2),
-  phone: z.string().min(6),
-  product: z.string().optional(),
-  message: z.string().optional(),
-});
+const ORDER_RATE_LIMIT = 5;
+const ORDER_WINDOW_MS = 15 * 60 * 1000;
 
 export async function GET() {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const { unauthorized } = await requireAdminSession();
+  if (unauthorized) return unauthorized;
 
   const orders = await prisma.orderRequest.findMany({
     orderBy: { createdAt: "desc" },
   });
-  return NextResponse.json(orders);
+
+  return jsonOk(orders);
 }
 
 export async function POST(request: Request) {
+  const clientIp = getClientIp(request);
+
+  if (!checkRateLimit(`orders:${clientIp}`, ORDER_RATE_LIMIT, ORDER_WINDOW_MS)) {
+    return jsonError("Слишком много заявок. Попробуйте позже.", 429);
+  }
+
   try {
     const body = orderSchema.parse(await request.json());
     const order = await prisma.orderRequest.create({ data: body });
-    return NextResponse.json(order, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+    return jsonOk(order, 201);
+  } catch (error) {
+    return jsonFromError(error);
   }
 }

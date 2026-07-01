@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
                 type="email"
                 required
                 autoComplete="email"
-                defaultValue="admin@air-cloud-msk.ru"
+                placeholder="admin@example.com"
               />
             </div>
             <div className="space-y-2">

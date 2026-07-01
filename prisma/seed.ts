@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { stringifyImages } from "../src/lib/utils";
+import { DEFAULT_SITE_SETTINGS } from "../src/lib/constants/defaults";
 
 const adapter = new PrismaBetterSqlite3({
   url: process.env.DATABASE_URL ?? "file:./dev.db",
@@ -78,21 +79,8 @@ const products = [
 async function main() {
   await prisma.siteSettings.upsert({
     where: { id: 1 },
-    update: {},
-    create: {
-      id: 1,
-      siteName: "Air Cloud MSK",
-      telegramUrl: "https://t.me/air_cloud_msk",
-      vkUrl: "https://vk.ru/vozdushnyesharymsk",
-      maxUrl: "",
-      phone: "+79652955956",
-      heroTitle: "Композиции из гелевых шаров",
-      heroSubtitle:
-        "Оформление праздников в Москве — гендер-пати, выписка, дни рождения",
-      seoTitle: "Air Cloud MSK — гелевые шары и оформление праздников в Москве",
-      seoDescription:
-        "Композиции из гелевых шаров на заказ: гендер-пати, выписка из роддома, дни рождения. Москва. Заказ через Telegram, VK или MAX.",
-    },
+    update: DEFAULT_SITE_SETTINGS,
+    create: { id: 1, ...DEFAULT_SITE_SETTINGS },
   });
 
   for (const category of categories) {

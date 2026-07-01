@@ -1,5 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { safeEqual } from "@/lib/auth-utils";
 
 const authConfig = {
   providers: [
@@ -9,14 +10,18 @@ const authConfig = {
         password: { label: "Password", type: "password" },
       },
       authorize(credentials) {
-        const email = credentials?.email as string | undefined;
-        const password = credentials?.password as string | undefined;
+        const email = credentials?.email?.toString() ?? "";
+        const password = credentials?.password?.toString() ?? "";
+        const adminEmail = process.env.ADMIN_EMAIL ?? "";
+        const adminPassword = process.env.ADMIN_PASSWORD ?? "";
 
-        if (
-          email === process.env.ADMIN_EMAIL &&
-          password === process.env.ADMIN_PASSWORD
-        ) {
-          return { id: "1", name: "Admin", email };
+        if (!adminEmail || !adminPassword) {
+          console.error("[auth] ADMIN_EMAIL или ADMIN_PASSWORD не заданы");
+          return null;
+        }
+
+        if (safeEqual(email, adminEmail) && safeEqual(password, adminPassword)) {
+          return { id: "1", name: "Admin", email: adminEmail };
         }
 
         return null;

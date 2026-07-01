@@ -5,7 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        hostname: "air-cloud-msk.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "www.air-cloud-msk.ru",
       },
     ],
   },

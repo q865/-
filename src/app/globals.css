@@ -12,6 +12,10 @@
   --blue-soft-dark: #8fb8d4;
   --foreground: #3d3a36;
   --foreground-muted: #6b6560;
+  --neutral-surface: #ffffff;
+  --neutral-muted: #f5f4f2;
+  --neutral-border: #ebe8e4;
+  --neutral-text: #8a8480;
 }
 
 @theme inline {
@@ -26,6 +30,11 @@
   --color-blue-soft: var(--blue-soft);
   --color-blue-soft-light: var(--blue-soft-light);
   --color-blue-soft-dark: var(--blue-soft-dark);
+  --color-neutral-surface: var(--neutral-surface);
+  --color-neutral-muted: var(--neutral-muted);
+  --color-neutral-border: var(--neutral-border);
+  --color-neutral-text: var(--neutral-text);
+  --color-muted: var(--foreground-muted);
   --font-sans: var(--font-manrope);
 }
 
@@ -54,8 +63,8 @@ textarea::placeholder {
 /* Мягкий фоновый градиент для страниц */
 .page-glow {
   background:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(232, 213, 213, 0.45), transparent),
-    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(216, 235, 245, 0.5), transparent),
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(232, 213, 213, 0.25), transparent),
+    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(216, 235, 245, 0.28), transparent),
     var(--cream);
 }
 
@@ -78,4 +87,34 @@ textarea::placeholder {
 
 .cloud-orb-cream {
   background: rgba(255, 252, 248, 0.9);
+}
+
+@layer components {
+  .page-container {
+    @apply mx-auto max-w-6xl px-4 sm:px-6;
+  }
+
+  .page-container-narrow {
+    @apply mx-auto max-w-3xl px-4 sm:px-6;
+  }
+
+  .section-kicker {
+    @apply text-xs font-semibold uppercase tracking-[0.2em] text-neutral-text;
+  }
+
+  .heading-display {
+    @apply text-4xl font-extrabold leading-[1.12] tracking-tight text-foreground sm:text-5xl lg:text-[3.25rem];
+  }
+
+  .heading-section {
+    @apply text-3xl font-bold text-foreground;
+  }
+
+  .text-muted {
+    color: var(--foreground-muted);
+  }
+
+  .link-accent {
+    @apply text-rose-dusty-dark transition hover:text-rose-dusty;
+  }
 }

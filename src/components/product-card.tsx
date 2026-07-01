@@ -10,28 +10,37 @@ export function ProductCard({ product }: { product: ProductWithCategory }) {
   const image = getProductCoverImage(product.images);
 
   return (
-    <Link href={`/product/${product.slug}`} className="group block">
-      <article className="overflow-hidden rounded-3xl border border-rose-dusty-light/50 bg-cream-card shadow-sm transition duration-300 hover:-translate-y-1 hover:border-rose-dusty-light hover:shadow-lg hover:shadow-rose-dusty/10">
-        <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-rose-dusty-light/30 to-blue-soft-light/40">
+    <Link href={`/product/${product.slug}`} className="group block h-full">
+      <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-neutral-border bg-neutral-surface shadow-sm transition duration-300 hover:shadow-md">
+        <div className="relative aspect-[4/5] overflow-hidden bg-neutral-muted">
           <ProductImage
             src={image}
             alt={product.name}
             fill
-            className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            className="object-cover transition duration-500 group-hover:scale-[1.02]"
             sizes="(max-width: 768px) 50vw, 25vw"
           />
           {product.featured ? (
-            <Badge className="absolute left-4 top-4">Популярное</Badge>
+            <Badge variant="promo" className="absolute left-3 top-3">
+              Популярное
+            </Badge>
           ) : null}
         </div>
-        <div className="space-y-2 p-5">
-          <p className="text-xs uppercase tracking-wider text-blue-soft-dark">
-            {product.category.name}
-          </p>
-          <h3 className="text-lg font-semibold text-[#3d3a36]">{product.name}</h3>
-          <p className="text-base font-bold text-rose-dusty-dark">
-            от {formatPrice(product.price)}
-          </p>
+        <div className="flex flex-1 flex-col gap-3 p-4">
+          <div className="space-y-1">
+            <p className="text-[11px] font-medium uppercase tracking-widest text-neutral-text">
+              {product.category.name}
+            </p>
+            <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground">
+              {product.name}
+            </h3>
+          </div>
+          <div className="mt-auto flex items-center justify-between gap-3 pt-1">
+            <p className="text-lg font-bold text-foreground">{formatPrice(product.price)}</p>
+            <span className="rounded-full bg-rose-dusty px-4 py-2 text-xs font-semibold text-white transition group-hover:bg-rose-dusty-dark">
+              Заказать
+            </span>
+          </div>
         </div>
       </article>
     </Link>
