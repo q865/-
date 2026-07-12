@@ -122,17 +122,29 @@ DATABASE_URL="..." npm run db:seed
 
 ### 5. DNS (Jino)
 
-В панели DNS для `air-cloud-msk.ru`:
+Подробная пошаговая инструкция с картинками полей: **[docs/dns-jino.md](docs/dns-jino.md)**
 
-| Тип | Имя | Значение |
-|-----|-----|----------|
-| A | `@` | `64.29.17.1` |
-| A | `@` | `216.198.79.1` |
+В панели **Jino → Домены → air-cloud-msk.ru → DNS** должно быть:
+
+| Тип | Имя (хост) | Значение |
+|-----|------------|----------|
+| A | `air-cloud-msk.ru` (или `@`) | `64.29.17.1` |
+| A | `air-cloud-msk.ru` (или `@`) | `216.198.79.1` |
 | CNAME | `www` | `cname.vercel-dns.com` |
 
-Удалите старую A-запись на IP Jino (`81.177.141.15`), если она ещё есть.
+**Удалить**, если есть:
 
-В Vercel → Settings → Domains добавьте `air-cloud-msk.ru` и `www.air-cloud-msk.ru`.
+- `*.air-cloud-msk.ru` → A (wildcard)
+- `www` → A (любой IP) — для www только CNAME
+- `air-cloud-msk.ru` → A → `81.177.141.15` (старый IP Jino)
+
+Проверка после правок (подождите 15–60 мин):
+
+```bash
+npm run dns:check
+```
+
+В Vercel → Settings → Domains: `air-cloud-msk.ru` и `www.air-cloud-msk.ru` — статус **Valid**.
 
 ---
 
@@ -259,9 +271,31 @@ npm run portfolio:download
 - Формат: JPEG, PNG, WebP, GIF; максимум 5 МБ
 - После загрузки нажмите **Сохранить** на форме товара
 
+### Сайт не открывается из России (нужен VPN)
+
+Сайт на **Vercel** — зарубежные IP иногда блокируют или режут российские провайдеры.
+
+**Шаг 1 — проверьте DNS** (бесплатно, часто помогает):
+
+1. Настройте DNS по [docs/dns-jino.md](docs/dns-jino.md)
+2. `npm run dns:check` — все пункты должны быть ✓
+3. Откройте без VPN: https://air-cloud-msk.ru и https://www.air-cloud-msk.ru
+4. Сравните с https://air-cloud-msk.vercel.app
+
+**Шаг 2 — если DNS верный, но без VPN всё равно не открывается:**
+
+IP Vercel режут на уровне провайдера. Решение — **российский прокси**:
+
+1. VPS в РФ (Jino, Timeweb, Selectel — от ~200 ₽/мес)
+2. Nginx reverse proxy → `air-cloud-msk.vercel.app`
+3. A-записи домена → IP российского VPS (вместо `64.29.17.1` / `216.198.79.1`)
+
+Сайт на Vercel остаётся, меняется только «вход» для пользователей из РФ.
+
 ### Сайт не открывается по домену
 
-- DNS должен указывать на Vercel (`64.29.17.1`), не на Jino
+- DNS должен указывать на Vercel — см. [docs/dns-jino.md](docs/dns-jino.md)
+- `npm run dns:check` покажет, что не так
 - Подождите 15–60 минут после смены DNS
 - Временно: https://air-cloud-msk.vercel.app
 
@@ -285,6 +319,7 @@ npm run build        # production-сборка
 npm run db:push      # схема БД
 npm run db:seed      # наполнение данными
 npm run portfolio:download  # скачать portfolio-фото
+npm run dns:check    # проверить DNS для Vercel
 npm run lint         # ESLint
 ```
 
