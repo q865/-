@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { ProductImage } from "@/components/product-image";
 import { getCategoryVisual } from "@/lib/category-visuals";
+import { resolveStockImage } from "@/lib/stock-images";
 
 type CategoryItem = {
   id: string;
   name: string;
   slug: string;
+  image?: string | null;
 };
 
 /** Короткие подписи для узких экранов. */
@@ -14,29 +17,50 @@ const SHORT_LABELS: Record<string, string> = {
   vypiska: "Выписка",
   "dni-rozhdeniya": "Дни рождения",
   svadby: "Свадьбы",
-  "biznes-i-meropriyatiya": "Для бизнеса",
+  "biznes-i-meropriyatiya": "Мероприятия",
+  "bolshoe-serdtse-80-90sm": "Сердце",
+  "shar-babl": "Бабл",
+  "steklyannyy-shar": "Стеклянный",
+  "gelievyy-vozdushnyy-shar": "Гелий",
+  "korobka-syurpriz-s-sharami": "Коробка",
 };
+
+function categoryImage(category: CategoryItem): string | null {
+  const fromAdmin = category.image?.trim();
+  if (fromAdmin) return fromAdmin;
+  return resolveStockImage({ categorySlug: category.slug });
+}
 
 export function CategoryIconGrid({ categories }: { categories: CategoryItem[] }) {
   return (
-    <div className="category-scroll sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible lg:grid-cols-6">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
       {categories.map((category) => {
-        const visual = getCategoryVisual(category.slug, category.name);
+        const visual = getCategoryVisual(category.slug);
         const Icon = visual.icon;
         const shortLabel = SHORT_LABELS[category.slug];
+        const imageSrc = categoryImage(category);
 
         return (
           <Link
             key={category.id}
             href={`/catalog?category=${category.slug}`}
-            className="category-scroll-item group flex w-[4.75rem] flex-col items-center gap-2 sm:w-auto"
+            className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-muted shadow-sm ring-1 ring-neutral-border/60 transition duration-300 [@media(hover:hover)]:hover:shadow-md"
           >
-            <div
-              className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl transition-transform duration-300 sm:h-20 sm:w-full sm:rounded-3xl [@media(hover:hover)]:group-hover:scale-105 ${visual.bgClass}`}
-            >
-              <Icon className={`h-7 w-7 sm:h-8 sm:w-8 ${visual.iconClass}`} aria-hidden />
-            </div>
-            <span className="line-clamp-2 min-h-[2.125rem] w-full text-center text-[10px] font-semibold leading-tight text-foreground sm:min-h-0 sm:text-sm">
+            {imageSrc ? (
+              <ProductImage
+                src={imageSrc}
+                alt={category.name}
+                fill
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                className="object-cover transition-transform duration-500 [@media(hover:hover)]:group-hover:scale-[1.04]"
+              />
+            ) : (
+              <div className={`absolute inset-0 flex items-center justify-center ${visual.bgClass}`}>
+                <Icon className={`h-10 w-10 ${visual.iconClass}`} aria-hidden />
+              </div>
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
+            <span className="absolute inset-x-0 bottom-0 p-3 text-sm font-semibold leading-snug text-white sm:p-4 sm:text-base">
               <span className="sm:hidden">{shortLabel ?? category.name}</span>
               <span className="hidden sm:inline">{category.name}</span>
             </span>

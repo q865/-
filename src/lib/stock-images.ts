@@ -85,6 +85,12 @@ export const STOCK_IMAGES_BY_CATEGORY: Record<string, string> = {
   "dni-rozhdeniya": pexelsUrl(1267320, 900),
   svadby: pexelsUrl(1708601, 900),
   "biznes-i-meropriyatiya": pexelsUrl(5632401, 900),
+  "bolshoe-serdtse-80-90sm": pexelsUrl(1024993, 900),
+  "shar-babl": pexelsUrl(1708601, 900),
+  "steklyannyy-shar": pexelsUrl(265906, 900),
+  "gelievyy-vozdushnyy-shar": pexelsUrl(1763075, 900),
+  "korobka-syurpriz-s-sharami": pexelsUrl(38257445, 900),
+  "den-rozhdeniya": pexelsUrl(1267320, 900),
 };
 
 export const STOCK_IMAGE_DEFAULT = pexelsUrl(265906, 900);

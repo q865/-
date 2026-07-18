@@ -124,7 +124,9 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
           onChange={(e) => setForm({ ...form, heroTitle: e.target.value })}
           maxLength={80}
         />
-        <p className="text-xs text-[#9c9590]">До 80 символов — короткая фраза для телефона</p>
+        <p className="text-xs text-[#9c9590]">
+          До 80 символов. Показывается крупно на главной — лучше одна ясная фраза.
+        </p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="heroSubtitle">Подзаголовок</Label>
@@ -135,7 +137,9 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
           maxLength={200}
           rows={3}
         />
-        <p className="text-xs text-[#9c9590]">До 200 символов, 1–2 предложения без списков</p>
+        <p className="text-xs text-[#9c9590]">
+          До 200 символов, 1–2 предложения. Без списков и «•» — на телефоне обрежется.
+        </p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="telegramUrl">Telegram</Label>

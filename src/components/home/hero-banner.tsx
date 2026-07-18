@@ -4,20 +4,13 @@ import { ProductImage } from "@/components/product-image";
 import { FadeIn } from "@/components/motion/fade-in-section";
 import { Button } from "@/components/ui/button";
 
-type HeroProduct = {
-  slug: string;
-  name: string;
-};
-
 export function HeroBanner({
   imageUrl,
-  product,
   title,
   subtitle,
   siteName,
 }: {
   imageUrl?: string | null;
-  product?: HeroProduct;
   title: string;
   subtitle: string;
   siteName: string;
@@ -64,16 +57,14 @@ export function HeroBanner({
                     <ArrowRight className="h-4 w-4" aria-hidden />
                   </Link>
                 </Button>
-                {product ? (
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="h-11 w-full border-white/40 bg-white/10 text-sm text-white hover:bg-white/20 sm:h-12 sm:w-auto sm:text-base"
-                  >
-                    <Link href={`/product/${product.slug}`}>Подробнее</Link>
-                  </Button>
-                ) : null}
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="h-11 w-full border-white/40 bg-white/10 text-sm text-white hover:bg-white/20 sm:h-12 sm:w-auto sm:text-base"
+                >
+                  <Link href="/contacts">Написать нам</Link>
+                </Button>
               </div>
             </div>
           </div>
