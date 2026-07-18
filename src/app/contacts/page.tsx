@@ -6,7 +6,8 @@ import { ContactForm } from "@/components/contact-form";
 import { OrderButtons } from "@/components/order-buttons";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { SITE_BRAND_NAME } from "@/lib/site-config";
-import { getSettings, buildTelUrl } from "@/lib/settings";
+import { getSettings } from "@/lib/queries/settings";
+import { buildTelUrl } from "@/lib/contact-links";
 import { formatPhone } from "@/lib/utils";
 
 export const metadata: Metadata = buildPageMetadata({

@@ -21,7 +21,7 @@ export function CategoryIconGrid({ categories }: { categories: CategoryItem[] })
   return (
     <div className="category-scroll sm:grid sm:grid-cols-3 sm:gap-4 sm:overflow-visible lg:grid-cols-6">
       {categories.map((category) => {
-        const visual = getCategoryVisual(category.slug);
+        const visual = getCategoryVisual(category.slug, category.name);
         const Icon = visual.icon;
         const shortLabel = SHORT_LABELS[category.slug];
 

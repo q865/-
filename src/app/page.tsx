@@ -285,7 +285,7 @@ export default async function HomePage() {
               Заказ по согласованию — удобно и прозрачно
             </h2>
             <p className="mt-4 text-lg text-white/90">
-              Работаем из дома, поэтому каждый заказ обсуждаем лично: дата, адрес, цвета и бюджет.
+              Каждый заказ обсуждаем лично: дата, адрес, цвета и бюджет — без лишней бюрократии.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-white text-gold-muted-dark hover:bg-neutral-muted">

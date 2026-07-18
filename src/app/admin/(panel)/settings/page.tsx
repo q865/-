@@ -1,4 +1,4 @@
-import { getSettings } from "@/lib/settings";
+import { getSettings } from "@/lib/queries/settings";
 import { SettingsForm } from "@/components/admin/settings-form";
 
 export default async function AdminSettingsPage() {

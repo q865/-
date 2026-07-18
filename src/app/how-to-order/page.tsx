@@ -3,13 +3,12 @@ import Link from "next/link";
 import { Send } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
-import { OrderButtons } from "@/components/order-buttons";
 import { Button } from "@/components/ui/button";
 import { orderSteps } from "@/lib/home-content";
 import { buildPageMetadata } from "@/lib/page-metadata";
 import { SITE_BRAND_NAME } from "@/lib/site-config";
-import { getSettings, buildTelUrl } from "@/lib/settings";
-import { buildTelegramOrderUrl } from "@/lib/contact-links";
+import { getSettings } from "@/lib/queries/settings";
+import { buildTelegramOrderUrl, buildTelUrl } from "@/lib/contact-links";
 import { formatPhone } from "@/lib/utils";
 
 export const metadata: Metadata = buildPageMetadata({

@@ -12,6 +12,9 @@ const manrope = Manrope({
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSettings();
 
+  const yandexVerification = process.env.YANDEX_VERIFICATION;
+  const googleVerification = process.env.GOOGLE_VERIFICATION;
+
   return {
     title: {
       default: settings.seoTitle,
@@ -23,6 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: SITE_URL,
     },
+    ...(yandexVerification || googleVerification
+      ? {
+          verification: {
+            ...(yandexVerification ? { yandex: yandexVerification } : {}),
+            ...(googleVerification ? { google: googleVerification } : {}),
+          },
+        }
+      : {}),
     robots: {
       index: true,
       follow: true,

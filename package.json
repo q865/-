@@ -11,6 +11,7 @@
     "db:seed": "tsx prisma/seed.ts",
     "portfolio:download": "node scripts/download-portfolio-images.mjs",
     "dns:check": "node scripts/check-dns.mjs",
+    "connectivity:check": "node scripts/check-connectivity.mjs",
     "postinstall": "prisma generate",
     "vercel-build": "prisma generate && prisma db push && next build"
   },

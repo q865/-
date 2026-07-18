@@ -60,6 +60,8 @@ cp .env.example .env
 | `ADMIN_PASSWORD` | Пароль админки |
 | `NEXTAUTH_URL` | `http://localhost:3000` локально |
 | `BLOB_READ_WRITE_TOKEN` | Токен Vercel Blob (опционально локально; без него фото пишутся в `public/uploads/`) |
+| `YANDEX_VERIFICATION` | Код верификации Яндекс Вебмастера (опционально) |
+| `GOOGLE_VERIFICATION` | Код верификации Google Search Console (опционально) |
 
 ### 3. База данных
 
@@ -101,6 +103,8 @@ npm run dev
 | `ADMIN_EMAIL` | `admin@air-cloud-msk.ru` |
 | `ADMIN_PASSWORD` | Сильный пароль (не `admin123`) |
 | `NEXTAUTH_URL` | `https://air-cloud-msk.ru` |
+| `YANDEX_VERIFICATION` | Код из meta-тега [Яндекс Вебмастера](https://webmaster.yandex.ru) (опционально) |
+| `GOOGLE_VERIFICATION` | Код из meta-тега [Google Search Console](https://search.google.com/search-console) (опционально) |
 
 ### 4. Деплой
 
@@ -145,6 +149,20 @@ npm run dns:check
 ```
 
 В Vercel → Settings → Domains: `air-cloud-msk.ru` и `www.air-cloud-msk.ru` — статус **Valid**.
+
+### 6. Поисковая индексация (Яндекс, Google)
+
+Сайт не появится в поиске сам по себе — нужно зарегистрировать его в вебмастерах и отправить sitemap.
+
+Пошаговая инструкция: **[docs/yandex-seo.md](docs/yandex-seo.md)**
+
+Кратко:
+1. [Яндекс Вебмастер](https://webmaster.yandex.ru) → добавить сайт → подтвердить через `YANDEX_VERIFICATION` в Vercel
+2. Отправить sitemap: `https://air-cloud-msk.ru/sitemap.xml`
+3. [Google Search Console](https://search.google.com/search-console) → то же с `GOOGLE_VERIFICATION`
+4. Добавить ссылку `https://air-cloud-msk.ru` в VK и Telegram
+
+Проверка: `site:air-cloud-msk.ru` в Яндексе (первые страницы — через 3–14 дней).
 
 ---
 
@@ -273,24 +291,9 @@ npm run portfolio:download
 
 ### Сайт не открывается из России (нужен VPN)
 
-Сайт на **Vercel** — зарубежные IP иногда блокируют или режут российские провайдеры.
+Vercel иногда режут российские провайдеры. Сначала `npm run dns:check`, затем при необходимости — **VPS-прокси** в РФ.
 
-**Шаг 1 — проверьте DNS** (бесплатно, часто помогает):
-
-1. Настройте DNS по [docs/dns-jino.md](docs/dns-jino.md)
-2. `npm run dns:check` — все пункты должны быть ✓
-3. Откройте без VPN: https://air-cloud-msk.ru и https://www.air-cloud-msk.ru
-4. Сравните с https://air-cloud-msk.vercel.app
-
-**Шаг 2 — если DNS верный, но без VPN всё равно не открывается:**
-
-IP Vercel режут на уровне провайдера. Решение — **российский прокси**:
-
-1. VPS в РФ (Jino, Timeweb, Selectel — от ~200 ₽/мес)
-2. Nginx reverse proxy → `air-cloud-msk.vercel.app`
-3. A-записи домена → IP российского VPS (вместо `64.29.17.1` / `216.198.79.1`)
-
-Сайт на Vercel остаётся, меняется только «вход» для пользователей из РФ.
+Подробная настройка: [docs/proxy-ru-vps.md](docs/proxy-ru-vps.md). Проверка: `npm run connectivity:check`
 
 ### Сайт не открывается по домену
 
@@ -319,9 +322,17 @@ npm run build        # production-сборка
 npm run db:push      # схема БД
 npm run db:seed      # наполнение данными
 npm run portfolio:download  # скачать portfolio-фото
-npm run dns:check    # проверить DNS для Vercel
+npm run dns:check    # проверить DNS (Vercel или VPS)
+npm run connectivity:check  # сайт открывается через прокси
 npm run lint         # ESLint
 ```
+
+| Файл в `scripts/` | Назначение |
+|-------------------|------------|
+| `setup-vps-proxy.sh` | Nginx + bypass на VPS (запускать на сервере) |
+| `check-dns.mjs` | `npm run dns:check` |
+| `check-connectivity.mjs` | `npm run connectivity:check` |
+| `download-portfolio-images.mjs` | `npm run portfolio:download` |
 
 ---
 
@@ -336,6 +347,8 @@ src/
 prisma/
   schema.prisma     # модели БД
   seed.ts           # seed-скрипт
+deploy/nginx/       # конфиги VPS-прокси
+docs/               # DNS, VPS-прокси, SEO
 public/
   brand/            # логотип
   uploads/portfolio/ # portfolio-фото (в git)
