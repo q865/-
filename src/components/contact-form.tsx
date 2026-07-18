@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export function ContactForm({ productName }: { productName?: string }) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -17,6 +18,7 @@ export function ContactForm({ productName }: { productName?: string }) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("loading");
+    setErrorMessage("");
 
     try {
       const response = await fetch("/api/orders", {
@@ -28,15 +30,29 @@ export function ContactForm({ productName }: { productName?: string }) {
         }),
       });
 
-      if (!response.ok) throw new Error("Failed");
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(
+          typeof data.error === "string"
+            ? data.error
+            : response.status === 429
+              ? "Слишком много заявок. Подождите минуту или напишите в Telegram."
+              : "Не удалось отправить заявку. Попробуйте ещё раз или напишите в мессенджер.",
+        );
+      }
       setStatus("success");
       setForm({
         name: "",
         phone: "",
         message: productName ? `Интересует: ${productName}` : "",
       });
-    } catch {
+    } catch (error) {
       setStatus("error");
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Не удалось отправить заявку. Напишите нам в Telegram или VK.",
+      );
     }
   }
 
@@ -94,7 +110,9 @@ export function ContactForm({ productName }: { productName?: string }) {
         />
       </div>
       {status === "error" ? (
-        <p className="text-sm text-red-600">Не удалось отправить. Попробуйте позже или напишите в Telegram.</p>
+        <p className="text-sm text-red-600">
+          {errorMessage || "Не удалось отправить. Попробуйте позже или напишите в Telegram."}
+        </p>
       ) : null}
       <Button type="submit" size="lg" className="scroll-mt-24 w-full" disabled={status === "loading"}>
         {status === "loading" ? "Отправка..." : "Отправить заявку"}

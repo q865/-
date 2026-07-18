@@ -1,3 +1,8 @@
+function serializeJsonLd(data: object): string {
+  // Escape < so product/settings text cannot break out of </script>
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
 export function JsonLd({ data }: { data: object | object[] | null }) {
   if (!data) return null;
 
@@ -9,7 +14,7 @@ export function JsonLd({ data }: { data: object | object[] | null }) {
         <script
           key={index}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(item) }}
         />
       ))}
     </>

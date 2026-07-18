@@ -58,6 +58,10 @@ export function buildFaqJsonLd() {
   };
 }
 
+function toAbsoluteImageUrl(image: string): string {
+  return image.startsWith("/") ? `${SITE_URL}${image}` : image;
+}
+
 export function buildProductListJsonLd(products: ProductWithCategory[]) {
   if (products.length === 0) return null;
 
@@ -65,28 +69,32 @@ export function buildProductListJsonLd(products: ProductWithCategory[]) {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Популярные композиции из гелевых шаров",
-    itemListElement: products.map((product, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      url: `${SITE_URL}/product/${product.slug}`,
-      name: product.name,
-      item: {
-        "@type": "Product",
+    itemListElement: products.map((product, index) => {
+      const cover = getProductCoverImage(product.images, {
+        slug: product.slug,
+        categorySlug: product.category.slug,
+      });
+
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${SITE_URL}/product/${product.slug}`,
         name: product.name,
-        description: product.description ?? undefined,
-        image: getProductCoverImage(product.images, {
-          slug: product.slug,
-          categorySlug: product.category.slug,
-        }),
-        offers: {
-          "@type": "Offer",
-          price: product.price,
-          priceCurrency: "RUB",
-          availability: "https://schema.org/InStock",
-          url: `${SITE_URL}/product/${product.slug}`,
+        item: {
+          "@type": "Product",
+          name: product.name,
+          description: product.description ?? undefined,
+          image: toAbsoluteImageUrl(cover),
+          offers: {
+            "@type": "Offer",
+            price: product.price,
+            priceCurrency: "RUB",
+            availability: "https://schema.org/InStock",
+            url: `${SITE_URL}/product/${product.slug}`,
+          },
         },
-      },
-    })),
+      };
+    }),
   };
 }
 

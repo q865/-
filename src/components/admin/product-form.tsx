@@ -240,7 +240,7 @@ export function ProductForm({
       <div className="space-y-3">
         <Label htmlFor="photos">Фото</Label>
         <p className="text-sm text-[#9c9590]">
-          Загрузите фото, затем обязательно нажмите «Сохранить» внизу формы.
+          Первое фото — обложка в каталоге. Загрузите фото, при необходимости нажмите «В обложку», затем «Сохранить».
         </p>
         <Input
           id="photos"
@@ -256,23 +256,44 @@ export function ProductForm({
         {uploading ? <p className="text-sm text-[#9c9590]">Загрузка...</p> : null}
         {images.length > 0 ? (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {images.map((image) => (
+            {images.map((image, index) => (
               <div
                 key={image}
                 className="overflow-hidden rounded-xl border border-rose-dusty-light/50 bg-rose-dusty-light/20"
               >
                 <div className="relative aspect-square">
                   <ProductImage src={image} alt="" fill className="object-cover" sizes="120px" />
+                  {index === 0 ? (
+                    <span className="absolute left-1.5 top-1.5 rounded-md bg-black/55 px-1.5 py-0.5 text-[10px] font-medium text-white">
+                      Обложка
+                    </span>
+                  ) : null}
                 </div>
-                <button
-                  type="button"
-                  className="w-full py-2 text-xs font-medium text-red-600 hover:bg-red-50"
-                  onClick={() =>
-                    setImages((prev) => prev.filter((item) => item !== image))
-                  }
-                >
-                  Удалить
-                </button>
+                <div className="flex divide-x divide-rose-dusty-light/40">
+                  {index > 0 ? (
+                    <button
+                      type="button"
+                      className="flex-1 py-2 text-xs font-medium text-rose-dusty-dark hover:bg-rose-dusty-light/30"
+                      onClick={() =>
+                        setImages((prev) => {
+                          const next = prev.filter((item) => item !== image);
+                          return [image, ...next];
+                        })
+                      }
+                    >
+                      В обложку
+                    </button>
+                  ) : null}
+                  <button
+                    type="button"
+                    className="flex-1 py-2 text-xs font-medium text-red-600 hover:bg-red-50"
+                    onClick={() =>
+                      setImages((prev) => prev.filter((item) => item !== image))
+                    }
+                  >
+                    Удалить
+                  </button>
+                </div>
               </div>
             ))}
           </div>

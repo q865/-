@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { SiteShell } from "@/components/layout/site-shell";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { CatalogView } from "@/components/catalog/catalog-view";
@@ -9,7 +10,7 @@ import { getCategories } from "@/lib/queries/categories";
 
 export const dynamic = "force-dynamic";
 
-type SearchParams = Promise<{ category?: string }>;
+type SearchParams = Promise<{ category?: string; q?: string; sort?: string }>;
 
 export async function generateMetadata({
   searchParams,
@@ -94,11 +95,13 @@ export default async function CatalogPage({
           </p>
         </div>
 
-        <CatalogView
-          products={products}
-          categories={categories}
-          activeSlug={categorySlug}
-        />
+        <Suspense fallback={<div className="h-40 animate-pulse rounded-3xl bg-neutral-muted/60" />}>
+          <CatalogView
+            products={products}
+            categories={categories}
+            activeSlug={categorySlug}
+          />
+        </Suspense>
       </div>
     </SiteShell>
   );

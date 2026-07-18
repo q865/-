@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image, { type ImageProps } from "next/image";
 import { IMAGE_BLUR_DATA_URL } from "@/lib/stock-images";
 import { cn, isPlaceholderImage } from "@/lib/utils";
@@ -22,8 +22,11 @@ export function ProductImage({
   priority,
   ...props
 }: ProductImageProps) {
-  const [failedSrc, setFailedSrc] = useState<string | null>(null);
-  const currentSrc = failedSrc === src && fallbackSrc ? fallbackSrc : src;
+  const [currentSrc, setCurrentSrc] = useState(src);
+
+  useEffect(() => {
+    setCurrentSrc(src);
+  }, [src]);
 
   const isRemote = currentSrc.startsWith("http");
   const isPortfolio = currentSrc.startsWith("/uploads/portfolio/");
@@ -32,7 +35,7 @@ export function ProductImage({
 
   function handleError() {
     if (fallbackSrc && currentSrc !== fallbackSrc) {
-      setFailedSrc(src);
+      setCurrentSrc(fallbackSrc);
     }
   }
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import type { Product, Category } from "@/generated/prisma/client";
 import { ProductCard } from "@/components/product-card";
@@ -14,6 +15,10 @@ type CategoryItem = { id: string; name: string; slug: string };
 
 type SortKey = "new" | "price-asc" | "price-desc";
 
+function isSortKey(value: string | null): value is SortKey {
+  return value === "new" || value === "price-asc" || value === "price-desc";
+}
+
 export function CatalogView({
   products,
   categories,
@@ -23,8 +28,31 @@ export function CatalogView({
   categories: CategoryItem[];
   activeSlug?: string;
 }) {
-  const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<SortKey>("new");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
+  const [sort, setSort] = useState<SortKey>(() => {
+    const fromUrl = searchParams.get("sort");
+    return isSortKey(fromUrl) ? fromUrl : "new";
+  });
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    const trimmed = query.trim();
+    if (trimmed) params.set("q", trimmed);
+    else params.delete("q");
+
+    if (sort === "new") params.delete("sort");
+    else params.set("sort", sort);
+
+    const next = params.toString();
+    const current = searchParams.toString();
+    if (next !== current) {
+      router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
+    }
+  }, [query, sort, pathname, router, searchParams]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -44,6 +72,16 @@ export function CatalogView({
     if (sort === "price-desc") sorted.sort((a, b) => b.price - a.price);
     return sorted;
   }, [products, query, sort]);
+
+  function categoryHref(slug?: string) {
+    const params = new URLSearchParams();
+    if (slug) params.set("category", slug);
+    const trimmed = query.trim();
+    if (trimmed) params.set("q", trimmed);
+    if (sort !== "new") params.set("sort", sort);
+    const qs = params.toString();
+    return qs ? `/catalog?${qs}` : "/catalog";
+  }
 
   const chipClass = (active: boolean) =>
     cn(
@@ -82,13 +120,13 @@ export function CatalogView({
         </div>
 
         <nav aria-label="Категории" className="category-scroll mt-3 md:hidden">
-          <Link href="/catalog" className={chipClass(!activeSlug)}>
+          <Link href={categoryHref()} className={chipClass(!activeSlug)}>
             Все
           </Link>
           {categories.map((category) => (
             <Link
               key={category.id}
-              href={`/catalog?category=${category.slug}`}
+              href={categoryHref(category.slug)}
               className={chipClass(activeSlug === category.slug)}
             >
               {category.name}
@@ -101,13 +139,13 @@ export function CatalogView({
         aria-label="Фильтр по категориям"
         className="mb-6 hidden md:flex md:flex-wrap md:gap-2 lg:mb-8"
       >
-        <Link href="/catalog" className={chipClass(!activeSlug)}>
+        <Link href={categoryHref()} className={chipClass(!activeSlug)}>
           Все
         </Link>
         {categories.map((category) => (
           <Link
             key={category.id}
-            href={`/catalog?category=${category.slug}`}
+            href={categoryHref(category.slug)}
             className={chipClass(activeSlug === category.slug)}
           >
             {category.name}
@@ -119,11 +157,26 @@ export function CatalogView({
         <div className="rounded-3xl border border-dashed border-neutral-border bg-neutral-surface p-8 text-center text-muted sm:p-12">
           <p className="font-medium text-foreground">Ничего не найдено</p>
           <p className="mt-2 text-sm">
-            Измените запрос или{" "}
-            <Link href="/contacts" className="link-accent font-medium">
-              напишите нам
-            </Link>{" "}
-            — соберём под заказ
+            {query.trim() ? (
+              <>
+                Попробуйте другой запрос или{" "}
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="link-accent font-medium"
+                >
+                  сбросить поиск
+                </button>
+              </>
+            ) : (
+              <>
+                Измените фильтр или{" "}
+                <Link href="/contacts" className="link-accent font-medium">
+                  напишите нам
+                </Link>{" "}
+                — соберём под заказ
+              </>
+            )}
           </p>
         </div>
       ) : (

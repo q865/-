@@ -52,7 +52,7 @@ export function ProductCard({ product }: { product: ProductWithCategory }) {
           href={`/product/${product.slug}`}
           className="flex min-h-9 w-full items-center justify-center rounded-xl bg-gold-muted text-[11px] font-semibold uppercase tracking-wide text-white shadow-sm transition-colors duration-300 sm:min-h-10 sm:text-xs [@media(hover:hover)]:group-hover:bg-gold-muted-dark"
         >
-          Заказать
+          Подробнее
         </Link>
       </div>
     </article>

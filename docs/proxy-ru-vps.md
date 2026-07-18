@@ -42,6 +42,8 @@ ssh root@147.45.215.60 'bash /root/air-cloud-msk/scripts/setup-vps-proxy.sh'
 | **A** | `air-cloud-msk.ru` | `147.45.215.60` |
 | **CNAME** | `www` | `air-cloud-msk.ru` |
 
+Nginx отдаёт **301** с `www` на apex (`https://air-cloud-msk.ru/...`).
+
 **Удалить:**
 - A → `64.29.17.1`, `216.198.79.1` (Vercel)
 - A → `62.217.189.112` (домашний Pi)

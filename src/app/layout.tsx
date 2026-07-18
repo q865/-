@@ -23,9 +23,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: settings.seoDescription,
     keywords: SITE_KEYWORDS,
     metadataBase: new URL(SITE_URL),
-    alternates: {
-      canonical: SITE_URL,
-    },
     ...(yandexVerification || googleVerification
       ? {
           verification: {

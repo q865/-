@@ -30,7 +30,17 @@ export function checkRateLimit(
 
 /** IP клиента из заголовков прокси (Vercel, nginx и т.д.). */
 export function getClientIp(request: Request): string {
+  // nginx на VPS выставляет X-Real-IP сам — ему доверяем в первую очередь
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+
   const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0]?.trim() ?? "unknown";
-  return request.headers.get("x-real-ip") ?? "unknown";
+  if (forwarded) {
+    // Берём крайний справа hop — ближе к нашему edge, чем клиентский leftmost
+    const hops = forwarded.split(",").map((part) => part.trim()).filter(Boolean);
+    const trusted = hops.at(-1);
+    if (trusted) return trusted;
+  }
+
+  return "unknown";
 }

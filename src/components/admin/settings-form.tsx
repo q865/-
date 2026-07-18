@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +10,7 @@ import { ProductImage } from "@/components/product-image";
 import type { SiteSettings } from "@/generated/prisma/client";
 
 export function SettingsForm({ settings }: { settings: SiteSettings }) {
+  const router = useRouter();
   const [form, setForm] = useState({
     ...settings,
     heroImageUrl: settings.heroImageUrl ?? "",
@@ -54,6 +56,7 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
     const data = await response.json().catch(() => ({}));
     if (response.ok) {
       setStatus("success");
+      router.refresh();
     } else {
       setStatus("error");
       setErrorMessage(typeof data.error === "string" ? data.error : "Ошибка сохранения");

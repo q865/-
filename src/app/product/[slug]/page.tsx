@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Send } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { ContactForm } from "@/components/contact-form";
@@ -16,34 +17,42 @@ import { buildPageMetadata } from "@/lib/page-metadata";
 import { getPublishedProductBySlug, getRelatedProducts } from "@/lib/queries/products";
 import { getSettings } from "@/lib/queries/settings";
 import { buildProductJsonLd } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site-config";
+import { buildTelegramOrderUrl } from "@/lib/contact-links";
 
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ slug: string }>;
+
+function productDescription(product: {
+  name: string;
+  description: string | null;
+  category: { name: string };
+}) {
+  return (
+    product.description?.trim() ||
+    `${product.name} — композиция из гелевых шаров (${product.category.name}). Подберём цвета и доставку по Москве.`
+  );
+}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const product = await getPublishedProductBySlug(slug);
   if (!product) return {};
 
-  const description =
-    product.description ??
-    `${product.name} — композиция из гелевых шаров (${product.category.name}). Заказ с доставкой по Москве.`;
+  const gallery = getProductGallery(product.images, {
+    slug: product.slug,
+    categorySlug: product.category.slug,
+  });
 
-  return {
-    ...buildPageMetadata({
-      title: `${product.name} — от ${formatPrice(product.price)}`,
-      description,
-      path: `/product/${product.slug}`,
-    }),
-    openGraph: {
-      title: product.name,
-      description,
-      url: `${SITE_URL}/product/${product.slug}`,
-      type: "website",
-    },
-  };
+  return buildPageMetadata({
+    title: `${product.name} — от ${formatPrice(product.price)}`,
+    description: productDescription(product),
+    path: `/product/${product.slug}`,
+    images: gallery.slice(0, 3).map((url) => ({
+      url,
+      alt: product.name,
+    })),
+  });
 }
 
 export default async function ProductPage({ params }: { params: Params }) {
@@ -61,12 +70,14 @@ export default async function ProductPage({ params }: { params: Params }) {
     slug: product.slug,
     categorySlug: product.category.slug,
   });
+  const description = productDescription(product);
+  const telegramHref = buildTelegramOrderUrl(settings.telegramUrl, product.name);
 
   return (
     <SiteShell>
       <JsonLd data={buildProductJsonLd(product)} />
 
-      <div className="page-container section-spacing">
+      <div className="page-container section-spacing pb-28 md:pb-14">
         <Breadcrumbs
           items={[
             { name: "Главная", href: "/" },
@@ -93,11 +104,7 @@ export default async function ProductPage({ params }: { params: Params }) {
               </p>
             </div>
 
-            {product.description ? (
-              <p className="text-base leading-7 text-muted sm:text-lg sm:leading-8">
-                {product.description}
-              </p>
-            ) : null}
+            <p className="text-base leading-7 text-muted sm:text-lg sm:leading-8">{description}</p>
 
             <div className="premium-card p-5 sm:p-6">
               <h2 className="text-lg font-semibold text-foreground">Оформить заказ</h2>
@@ -134,6 +141,18 @@ export default async function ProductPage({ params }: { params: Params }) {
             </StaggerGrid>
           </section>
         ) : null}
+      </div>
+
+      <div className="fixed inset-x-0 bottom-[calc(3.25rem+env(safe-area-inset-bottom,0px))] z-[90] border-t border-neutral-border bg-neutral-surface/95 p-3 backdrop-blur-lg md:hidden">
+        <a
+          href={telegramHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl bg-gold-muted text-sm font-semibold text-white shadow-sm"
+        >
+          <Send className="h-4 w-4" aria-hidden />
+          Заказать в Telegram
+        </a>
       </div>
     </SiteShell>
   );
