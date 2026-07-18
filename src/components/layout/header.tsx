@@ -70,7 +70,6 @@ export function SocialLinks({
 export function Header({ settings }: { settings: SiteSettings }) {
   const links = [
     { href: "/catalog", label: "Каталог" },
-    { href: "/services", label: "Услуги" },
     { href: "/how-to-order", label: "Как заказать" },
     { href: "/contacts", label: "Контакты" },
   ];

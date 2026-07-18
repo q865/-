@@ -85,8 +85,7 @@ export default async function ContactsPage() {
               <div className="rounded-3xl border border-blue-soft/30 bg-blue-soft-light/40 p-5 sm:p-6">
                 <h2 className="font-semibold text-foreground">Мессенджер MAX</h2>
                 <p className="mt-2 text-sm leading-6 text-blue-soft-dark">
-                  Найдите нас в MAX по номеру {formatPhone(settings.phone)} или добавьте
-                  ссылку на профиль в админке, когда она будет готова.
+                  Найдите нас в MAX по номеру {formatPhone(settings.phone)}.
                 </p>
               </div>
             ) : null}

@@ -13,14 +13,12 @@ import { OrderButtons } from "@/components/order-buttons";
 import { ProductCard } from "@/components/product-card";
 import { HeroBanner } from "@/components/home/hero-banner";
 import { CategoryIconGrid } from "@/components/home/category-icon-grid";
-import { ProductImage } from "@/components/product-image";
 import { Button } from "@/components/ui/button";
 import { productGridClassName } from "@/components/ui/product-grid";
 import {
   advantages,
   faqItems,
   occasions,
-  orderSteps,
   seoTextBlocks,
   trustItems,
 } from "@/lib/home-content";
@@ -37,8 +35,6 @@ import {
 import { buildTelUrl } from "@/lib/contact-links";
 import { SITE_KEYWORDS, SITE_URL } from "@/lib/site-config";
 import { cn, formatPhone } from "@/lib/utils";
-import { resolveStockImage } from "@/lib/stock-images";
-import { businessServices } from "@/lib/services-content";
 
 export const dynamic = "force-dynamic";
 
@@ -172,53 +168,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="business-heading" className="border-y border-neutral-border bg-neutral-muted/50 section-spacing">
-        <div className="page-container">
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="section-kicker">Для бизнеса</p>
-              <h2 id="business-heading" className="heading-section mt-2">
-                Витрины, открытия и корпоративы
-              </h2>
-              <p className="mt-2 max-w-xl text-muted">
-                Оформление для магазинов, ТЦ, офисов и промо — под бренд и бюджет.
-              </p>
-            </div>
-            <Link href="/services" className="link-accent touch-target py-1 text-sm font-medium">
-              Все услуги для бизнеса →
-            </Link>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {businessServices.slice(0, 4).map((service) => (
-              <Link
-                key={service.slug}
-                href={service.href}
-                className="premium-card group flex gap-4 overflow-hidden p-4"
-              >
-                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-neutral-muted sm:h-24 sm:w-24">
-                  <ProductImage
-                    src={resolveStockImage({ slug: service.slug, categorySlug: "biznes-i-meropriyatiya" })}
-                    alt={service.title}
-                    fill
-                    sizes="96px"
-                    className="object-cover transition-transform duration-300 [@media(hover:hover)]:group-hover:scale-105"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-semibold text-foreground">{service.title}</h3>
-                  <p className="mt-1 line-clamp-2 text-sm leading-snug text-muted">{service.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Button asChild variant="outline">
-              <Link href="/catalog?category=biznes-i-meropriyatiya">Каталог для бизнеса</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
       <section aria-labelledby="advantages-heading" className="border-y border-neutral-border bg-neutral-surface section-spacing">
         <div className="page-container">
           <p className="section-kicker">О нас</p>
@@ -240,21 +189,19 @@ export default async function HomePage() {
       </section>
 
       <section aria-labelledby="steps-heading" className="page-container section-spacing">
-        <p className="section-kicker">Заказ</p>
-        <h2 id="steps-heading" className="heading-section mt-2">
-          Как заказать гелевые шары
-        </h2>
-        <div className="mt-8 grid gap-5 lg:grid-cols-3">
-          {orderSteps.map((step) => (
-            <article key={step.step} className="rounded-2xl border border-neutral-border bg-neutral-surface p-6 shadow-sm">
-              <p className="text-sm font-bold text-gold-muted-dark">{step.step}</p>
-              <h3 className="mt-2 text-xl font-semibold text-foreground">{step.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-muted">{step.text}</p>
-              <Link href={step.href} className="link-accent mt-4 inline-flex text-sm font-medium">
-                Подробнее →
-              </Link>
-            </article>
-          ))}
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="section-kicker">Заказ</p>
+            <h2 id="steps-heading" className="heading-section mt-2">
+              Как заказать гелевые шары
+            </h2>
+            <p className="mt-2 max-w-xl text-muted">
+              Выберите композицию, согласуйте детали и доставку — без лишней бюрократии.
+            </p>
+          </div>
+          <Button asChild variant="outline">
+            <Link href="/how-to-order">Подробная инструкция →</Link>
+          </Button>
         </div>
       </section>
 
@@ -280,7 +227,7 @@ export default async function HomePage() {
       <section aria-labelledby="promo-heading" className="page-container section-spacing">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold-muted via-gold-muted-dark to-blue-soft-dark p-6 text-white sm:p-12">
           <div className="relative max-w-2xl">
-            <p className="section-kicker text-white/70">Акция</p>
+            <p className="section-kicker text-white/70">Заказ</p>
             <h2 id="promo-heading" className="heading-section mt-2 text-white">
               Заказ по согласованию — удобно и прозрачно
             </h2>

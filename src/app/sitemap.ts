@@ -4,19 +4,12 @@ import { SITE_URL } from "@/lib/site-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let products: { slug: string; updatedAt: Date }[] = [];
-  let categories: { slug: string; updatedAt: Date }[] = [];
 
   try {
-    [products, categories] = await Promise.all([
-      prisma.product.findMany({
-        where: { published: true },
-        select: { slug: true, updatedAt: true },
-      }),
-      prisma.category.findMany({
-        select: { slug: true, updatedAt: true },
-        orderBy: { sortOrder: "asc" },
-      }),
-    ]);
+    products = await prisma.product.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true },
+    });
   } catch {
     // БД недоступна при сборке без Postgres
   }
@@ -35,12 +28,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${SITE_URL}/services`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.85,
-    },
-    {
       url: `${SITE_URL}/how-to-order`,
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -54,13 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const categoryPages: MetadataRoute.Sitemap = categories.map((category) => ({
-    url: `${SITE_URL}/catalog?category=${category.slug}`,
-    lastModified: category.updatedAt,
-    changeFrequency: "weekly",
-    priority: 0.75,
-  }));
-
+  // Категории через ?category= не добавляем — тонкие дубли /catalog
   const productPages: MetadataRoute.Sitemap = products.map((product) => ({
     url: `${SITE_URL}/product/${product.slug}`,
     lastModified: product.updatedAt,
@@ -68,5 +49,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...categoryPages, ...productPages];
+  return [...staticPages, ...productPages];
 }

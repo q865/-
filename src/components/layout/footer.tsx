@@ -37,9 +37,6 @@ export function Footer({
             <Link href="/catalog" className={linkClass}>
               Каталог
             </Link>
-            <Link href="/services" className={linkClass}>
-              Услуги для бизнеса
-            </Link>
             <Link href="/how-to-order" className={linkClass}>
               Как заказать
             </Link>
