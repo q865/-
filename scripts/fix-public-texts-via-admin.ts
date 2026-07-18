@@ -11,8 +11,8 @@ config({ path: ".env", override: true });
 
 const BASE = "https://air-cloud-msk.ru";
 
-const email = process.env.ADMIN_EMAIL?.trim();
-const password = process.env.ADMIN_PASSWORD?.trim();
+const email = process.env.ADMIN_EMAIL?.trim() ?? "";
+const password = process.env.ADMIN_PASSWORD?.trim() ?? "";
 
 if (!email || !password) {
   throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env");
