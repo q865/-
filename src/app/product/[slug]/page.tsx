@@ -19,7 +19,7 @@ import { getSettings } from "@/lib/queries/settings";
 import { buildProductJsonLd } from "@/lib/seo";
 import { buildTelegramOrderUrl } from "@/lib/contact-links";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 type Params = Promise<{ slug: string }>;
 

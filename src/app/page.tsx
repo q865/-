@@ -37,7 +37,7 @@ import { buildTelUrl } from "@/lib/contact-links";
 import { SITE_KEYWORDS, SITE_URL } from "@/lib/site-config";
 import { cn, formatPhone } from "@/lib/utils";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 /** Категории B2B не показываем на главной — остаются в каталоге и админке. */
 const HIDDEN_HOME_CATEGORY_SLUGS = new Set(["biznes-i-meropriyatiya"]);
