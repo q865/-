@@ -70,21 +70,28 @@ Nginx доходит до Vercel, но Vercel отдаёт **«Vercel Security C
 
 ### Вариант A — System Bypass (Pro/Enterprise)
 
+На тарифах Hobby/без IP Bypass **недоступно** (`IP Bypass is unavailable for this plan`).
+Если план позволяет:
+
 1. [Vercel Dashboard](https://vercel.com) → проект **air-cloud-msk**
 2. **Firewall** → **Configure**
 3. **System Bypass Rules** → добавить IP **`147.45.215.60`**
 
-### Вариант B — Protection Bypass (любой план)
+Или CLI: `vercel firewall system-bypass add 147.45.215.60`
 
-1. Vercel → **Settings** → **Deployment Protection**
-2. **Protection Bypass for Automation** → сгенерировать секрет
-3. На VPS:
+### Вариант B — Protection Bypass (любой план) — основной для нас
+
+1. Vercel → проект → **Settings** → **Deployment Protection**
+2. **Protection Bypass for Automation** → Create / Reveal secret
+3. На VPS пропишите тот же секрет:
 
 ```bash
 VERCEL_BYPASS_SECRET='ваш-секрет' bash /root/air-cloud-msk/scripts/setup-vps-proxy.sh --fix
 ```
 
 Секрет попадёт в `/etc/nginx/snippets/vercel-bypass.conf` как заголовок `x-vercel-protection-bypass`.
+
+Без совпадения секрета в Vercel и на VPS заголовок просто игнорируется (сайт может работать, но при Checkpoint роботы снова получат 403).
 
 ---
 

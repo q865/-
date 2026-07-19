@@ -181,19 +181,36 @@ curl -sS https://air-cloud-msk.ru/ | grep -E 'yandex-verification|google-site-ve
 Если в **Оптимизация сайта → Диагностика** висит
 «Не удалось подключиться из-за ошибки сервера»:
 
-1. С телефона (мобильный интернет, без VPN) откройте `https://air-cloud-msk.ru` — страница должна открыться.
-2. Проверьте с Pi: `npm run connectivity:check` — ожидается HTTP 200.
-3. На VPS убедитесь, что включён bypass до Vercel (см. `docs/proxy-ru-vps.md`):
-   - System Bypass IP `147.45.215.60`, **или**
-   - заголовок `x-vercel-protection-bypass` в `/etc/nginx/snippets/vercel-bypass.conf`
-4. Обновите nginx-конфиг из `deploy/nginx/air-cloud-msk.ru.conf` (буферизация + таймауты) и сделайте `nginx -t && systemctl reload nginx`.
-5. В Вебмастере дождитесь повторной проверки или запросите переобход главной.
+### Сначала техника (уже на VPS)
 
-Пока робот не стабильно достучится до сервера, страницы **не попадут в поиск**.
+1. С телефона (мобильный интернет, без VPN) откройте `https://air-cloud-msk.ru` — должна открыться.
+2. С Pi: `npm run connectivity:check` — HTTP 200.
+3. Bypass до Vercel (см. `docs/proxy-ru-vps.md` §5):
+   - System Bypass IP `147.45.215.60` (только Pro), **или**
+   - `x-vercel-protection-bypass` в `/etc/nginx/snippets/vercel-bypass.conf` + тот же секрет в Vercel → Deployment Protection
+4. Для ботов на VPS включён **microcache HTML 60с** (`conf.d/bot-proxy-cache.conf`) + локальные `robots.txt` / `favicon.ico`.
+
+### Что сделать в Вебмастере
+
+1. Работайте только с **`https://air-cloud-msk.ru`** (не www).
+2. В карточке ошибки нажмите **«Перепроверить»** (если есть) или дождитесь конца «Проверяем…».
+3. **Индексирование → Переобход страниц** → отправьте:
+   - `https://air-cloud-msk.ru/`
+   - `https://air-cloud-msk.ru/catalog`
+4. **Индексирование → Файлы Sitemap** — `https://air-cloud-msk.ru/sitemap.xml` в статусе «Обработан».
+5. Регион: Москва / Московская область. Обход по Метрике — подключён.
+
+### Критерий успеха
+
+- В логах VPS (`/var/log/nginx/access.log`) запросы с `YandexBot` / IP Яндекса → **200** (не 403/502/504).
+- В диагностике ошибка уходит в «Исправлено» (часто **часы–2 суток** после фикса — UI отстаёт).
+- Позже: `site:air-cloud-msk.ru` > 0.
+
+Пока робот нестабильно достучится до сервера, страницы **не попадут в поиск**.
 
 ### Favicon
 
-`/favicon.ico` должен отдавать **200**. Если Вебмастер пишет «файл не найден» — нажмите перепроверку после деплоя (файл есть в `public/favicon.ico` и `src/app/favicon.ico`).
+`/favicon.ico` должен отдавать **200**. Если Вебмастер пишет «файл не найден» — нажмите перепроверку (файл отдаётся с VPS).
 
 ### Регион сайта
 
