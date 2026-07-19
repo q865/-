@@ -13,7 +13,12 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const file = formData.get("file");
     const folderRaw = formData.get("folder");
-    const folder = folderRaw === "hero" ? "hero" : "products";
+    const folder =
+      folderRaw === "hero"
+        ? "hero"
+        : folderRaw === "categories"
+          ? "categories"
+          : "products";
 
     if (!(file instanceof File)) {
       return jsonError("Файл не передан", 400);

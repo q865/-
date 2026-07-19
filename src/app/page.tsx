@@ -18,9 +18,7 @@ import { productGridClassName } from "@/components/ui/product-grid";
 import {
   advantages,
   faqItems,
-  occasions,
   orderSteps,
-  seoTextBlocks,
   trustItems,
 } from "@/lib/home-content";
 import { buildPageMetadata } from "@/lib/page-metadata";
@@ -147,25 +145,6 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <section aria-labelledby="occasions-heading" className="page-container section-spacing">
-        <p className="section-kicker">Поводы</p>
-        <h2 id="occasions-heading" className="heading-section mt-2">
-          Подберём шары под ваш момент
-        </h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {occasions.map((occasion) => (
-            <Link
-              key={occasion.title}
-              href={occasion.href}
-              className="rounded-2xl border border-neutral-border/80 bg-neutral-surface p-6 transition hover:border-gold-muted-light"
-            >
-              <h3 className="text-lg font-semibold text-foreground">{occasion.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-muted">{occasion.text}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       <section aria-labelledby="advantages-heading" className="border-y border-neutral-border bg-neutral-surface section-spacing">
         <div className="page-container">
           <p className="section-kicker">О нас</p>
@@ -282,25 +261,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section aria-labelledby="seo-text-heading" className="page-container pb-12 sm:pb-16">
-        <div className="rounded-2xl border border-neutral-border/70 bg-neutral-muted/20 p-6 sm:p-8">
-          <h2 id="seo-text-heading" className="sr-only">
-            О доставке гелевых шаров в Москве
-          </h2>
-          <div className="space-y-6">
-            {seoTextBlocks.map((block) => (
-              <div key={block.title}>
-                <h3 className="text-lg font-bold text-foreground sm:text-xl">{block.title}</h3>
-                {block.paragraphs.map((paragraph) => (
-                  <p key={paragraph.slice(0, 40)} className="mt-3 text-sm leading-7 text-muted">
-                    {paragraph}
-                  </p>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </SiteShell>
   );
 }

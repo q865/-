@@ -14,6 +14,7 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
   const [form, setForm] = useState({
     ...settings,
     heroImageUrl: settings.heroImageUrl ?? "",
+    pickupAddress: settings.pickupAddress ?? "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [uploading, setUploading] = useState(false);
@@ -182,6 +183,19 @@ export function SettingsForm({ settings }: { settings: SiteSettings }) {
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
           placeholder="+79652955956"
         />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="pickupAddress">Адрес самовывоза</Label>
+        <Textarea
+          id="pickupAddress"
+          value={form.pickupAddress}
+          onChange={(e) => setForm({ ...form, pickupAddress: e.target.value })}
+          rows={2}
+          placeholder="Лобненская ул., 13к1, ЖК «Дмитровский парк»"
+        />
+        <p className="text-xs text-[#9c9590]">
+          Показывается в контактах и подвале. Оставьте пустым, чтобы скрыть.
+        </p>
       </div>
       <div className="space-y-2">
         <Label htmlFor="seoTitle">SEO заголовок</Label>

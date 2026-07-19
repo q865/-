@@ -8,6 +8,7 @@ export const DEFAULT_SITE_SETTINGS: Omit<SiteSettings, "id"> = {
   vkUrl: "https://vk.ru/vozdushnyesharymsk",
   maxUrl: "",
   phone: "+79652955956",
+  pickupAddress: "Лобненская ул., 13к1, ЖК «Дмитровский парк»",
   heroTitle: "Создаём волшебство!",
   heroSubtitle:
     "Композиции на заказ: гендер-пати, выписка из роддома, дни рождения и свадьбы. Согласуем дату, цвета и доставку — напишите в Telegram или VK.",

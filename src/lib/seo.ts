@@ -8,6 +8,7 @@ type ProductWithCategory = Product & { category: Category };
 export function buildLocalBusinessJsonLd(settings: SiteSettings) {
   const sameAs = [settings.telegramUrl, settings.vkUrl].filter(Boolean);
   if (settings.maxUrl) sameAs.push(settings.maxUrl);
+  const streetAddress = settings.pickupAddress?.trim();
 
   return {
     "@context": "https://schema.org",
@@ -19,6 +20,7 @@ export function buildLocalBusinessJsonLd(settings: SiteSettings) {
     image: `${SITE_URL}/uploads/portfolio/nabor-gender-pati.jpg`,
     address: {
       "@type": "PostalAddress",
+      ...(streetAddress ? { streetAddress } : {}),
       addressLocality: "Москва",
       addressRegion: "Москва",
       addressCountry: "RU",

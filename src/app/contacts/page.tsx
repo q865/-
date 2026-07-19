@@ -16,14 +16,19 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/contacts",
 });
 
-const contactHighlights = [
-  { icon: MapPin, label: "Москва и область", detail: "Доставка по согласованию" },
-  { icon: Clock, label: "Ответ", detail: "Обычно в течение часа в рабочее время" },
-  { icon: Phone, label: "Телефон", detail: "Звонок или мессенджер — как удобнее" },
-];
-
 export default async function ContactsPage() {
   const settings = await getSettings();
+  const pickupAddress = settings.pickupAddress?.trim();
+
+  const contactHighlights = [
+    {
+      icon: MapPin,
+      label: pickupAddress ? "Самовывоз" : "Москва и область",
+      detail: pickupAddress || "Доставка по согласованию",
+    },
+    { icon: Clock, label: "Ответ", detail: "Обычно в течение часа в рабочее время" },
+    { icon: Phone, label: "Телефон", detail: "Звонок или мессенджер — как удобнее" },
+  ];
 
   return (
     <SiteShell>
@@ -70,6 +75,15 @@ export default async function ContactsPage() {
               <p className="mt-2 text-sm text-muted">
                 Гелевые шары и оформление праздников · Москва
               </p>
+              {pickupAddress ? (
+                <p className="mt-4 flex items-start gap-2 text-sm leading-6 text-foreground">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-muted-dark" aria-hidden />
+                  <span>
+                    <span className="font-medium">Самовывоз: </span>
+                    {pickupAddress}
+                  </span>
+                </p>
+              ) : null}
               <a
                 href={buildTelUrl(settings.phone)}
                 className="touch-target mt-5 block text-2xl font-bold text-foreground hover:text-gold-muted-dark sm:text-3xl"

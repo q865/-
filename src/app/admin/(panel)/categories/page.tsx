@@ -10,7 +10,9 @@ export default async function AdminCategoriesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-[#3d3a36]">Категории</h1>
-        <p className="mt-1 text-[#9c9590]">Группы товаров в каталоге</p>
+        <p className="mt-1 text-[#9c9590]">
+          Создавайте, редактируйте и удаляйте группы. Картинка — для блока «Что мы оформляем» на главной.
+        </p>
       </div>
       <CategoryManager initialCategories={categories} />
     </div>

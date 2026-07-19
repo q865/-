@@ -14,6 +14,7 @@ export function Footer({
   categories?: FooterCategory[];
 }) {
   const linkClass = "touch-target py-1 text-sm text-muted transition hover:text-gold-muted-dark";
+  const pickupAddress = settings.pickupAddress?.trim();
 
   return (
     <footer className="mt-auto border-t border-neutral-border bg-neutral-surface">
@@ -29,6 +30,12 @@ export function Footer({
             Композиции из гелевых шаров и оформление праздников в Москве.
             Заказ по согласованию — напишите нам удобным способом.
           </p>
+          {pickupAddress ? (
+            <p className="mt-3 text-sm leading-6 text-muted">
+              <span className="font-medium text-foreground">Самовывоз: </span>
+              {pickupAddress}
+            </p>
+          ) : null}
         </div>
 
         <div>
