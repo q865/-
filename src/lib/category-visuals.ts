@@ -91,6 +91,21 @@ export const CATEGORY_VISUALS: Record<string, CategoryVisual> = {
     bgClass: "bg-lavender-soft/75",
     iconClass: "text-rose-dusty-dark",
   },
+  fotozona: {
+    icon: Ribbon,
+    bgClass: "bg-rose-dusty-light/60",
+    iconClass: "text-rose-dusty-dark",
+  },
+  "oformlenie-vhodnoy-gruppy": {
+    icon: Building2,
+    bgClass: "bg-mint-soft/80",
+    iconClass: "text-blue-soft-dark",
+  },
+  "oformlenie-vhodnoj-gruppy": {
+    icon: Building2,
+    bgClass: "bg-mint-soft/80",
+    iconClass: "text-blue-soft-dark",
+  },
 };
 
 type KeywordRule = {
