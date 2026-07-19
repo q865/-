@@ -4,14 +4,21 @@ import { auth } from "@/auth";
 const APEX_HOST = "air-cloud-msk.ru";
 const WWW_HOST = "www.air-cloud-msk.ru";
 
-export default auth((req) => {
-  const raw =
-    req.headers.get("x-forwarded-host")?.split(",")[0]?.trim() ||
-    req.headers.get("host")?.split(",")[0]?.trim() ||
-    "";
-  const host = raw.toLowerCase().replace(/:\d+$/, "");
+function resolveHost(req: { headers: Headers }): string {
+  const candidates = [
+    req.headers.get("x-site-host"),
+    req.headers.get("x-forwarded-host"),
+    req.headers.get("host"),
+  ];
+  for (const raw of candidates) {
+    const host = raw?.split(",")[0]?.trim().toLowerCase().replace(/:\d+$/, "");
+    if (host) return host;
+  }
+  return "";
+}
 
-  if (host === WWW_HOST) {
+export default auth((req) => {
+  if (resolveHost(req) === WWW_HOST) {
     const url = req.nextUrl.clone();
     url.hostname = APEX_HOST;
     url.protocol = "https:";

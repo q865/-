@@ -11,13 +11,25 @@ const nextConfig: NextConfig = {
         destination: "https://air-cloud-msk.ru/:path*",
         permanent: true,
       },
-      // Через RU-прокси: Host = vercel.app, реальный хост в X-Forwarded-Host
+      // Через RU-прокси: Host = vercel.app; смотрим X-Forwarded-Host и X-Site-Host
       {
         source: "/:path*",
         has: [
           {
             type: "header",
             key: "x-forwarded-host",
+            value: "www.air-cloud-msk.ru",
+          },
+        ],
+        destination: "https://air-cloud-msk.ru/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "header",
+            key: "x-site-host",
             value: "www.air-cloud-msk.ru",
           },
         ],
