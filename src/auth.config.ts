@@ -36,12 +36,13 @@ const authConfig = {
   },
   callbacks: {
     authorized({ auth, request }) {
-      const isLoggedIn = !!auth?.user;
-      const isLoginPage = request.nextUrl.pathname === "/admin/login";
+      const path = request.nextUrl.pathname;
+      // Публичный сайт не требует сессии (нужно для matcher шире /admin)
+      if (!path.startsWith("/admin")) return true;
 
+      const isLoginPage = path === "/admin/login";
       if (isLoginPage) return true;
-      if (!isLoggedIn) return false;
-      return true;
+      return !!auth?.user;
     },
   },
   trustHost: true,
