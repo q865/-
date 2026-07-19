@@ -1,3 +1,4 @@
+import { YandexMetrika } from "@/components/analytics/yandex-metrika";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
@@ -9,6 +10,8 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
     getSettings(),
     getFooterCategories(),
   ]);
+  const metrikaId =
+    process.env.NEXT_PUBLIC_YANDEX_METRIKA_ID?.trim() || "110860180";
 
   return (
     <>
@@ -18,6 +21,7 @@ export async function SiteShell({ children }: { children: React.ReactNode }) {
       </main>
       <Footer settings={settings} categories={categories} />
       <MobileBottomNav />
+      {metrikaId ? <YandexMetrika counterId={metrikaId} /> : null}
     </>
   );
 }

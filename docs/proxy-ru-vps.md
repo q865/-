@@ -114,6 +114,30 @@ nginx -t && systemctl status nginx
 
 ---
 
+## 7. Яндекс: «ошибка сервера» при живом сайте
+
+Вебмастер иногда пишет «Не удалось подключиться из-за ошибки сервера», хотя сайт открывается у людей.
+Частая причина — **Vercel Security Checkpoint** или таймаут upstream, когда робот ходит через VPS.
+
+Проверка с VPS:
+
+```bash
+curl -sI -o /dev/null -w "%{http_code}\n" -H "Host: air-cloud-msk.vercel.app" https://air-cloud-msk.vercel.app/
+curl -sI -o /dev/null -w "%{http_code}\n" -A "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)" https://air-cloud-msk.ru/
+```
+
+Оба ответа должны быть **200**, без HTML «Vercel Security Checkpoint».
+Если 403 — вернитесь к разделу 5 (System Bypass / Protection Bypass).
+
+После правки конфига:
+
+```bash
+scp deploy/nginx/air-cloud-msk.ru.conf root@147.45.215.60:/etc/nginx/sites-available/air-cloud-msk.ru
+ssh root@147.45.215.60 'nginx -t && systemctl reload nginx'
+```
+
+---
+
 ## Важно
 
 - В nginx **Host** к Vercel = `air-cloud-msk.vercel.app` (не `air-cloud-msk.ru`)
